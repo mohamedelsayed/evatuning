@@ -1,0 +1,1 @@
+window.CKEDITOR_BASEPATH = '/mywork/evatuning/sites/all/libraries/ckeditor/';
