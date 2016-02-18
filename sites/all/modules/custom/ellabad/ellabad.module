@@ -21,14 +21,14 @@ function ellabad_form_alter(&$form, &$form_state, $form_id){
  */ 
 function ellabad_test() {
 
-	$_SESSION['id'] = 'my-id';
-	// die(pr($_SESSION));
-	global $user;
-	// die(pr($user));
-	if(user_is_logged_in()) {
-		die(pr($user));
-	} else {
-		// die('You are not logged in');
-		die(pr($user));
-	}
+	// $_SESSION['id'] = 'my-id';
+	// // die(pr($_SESSION));
+	// global $user;
+	// // die(pr($user));
+	// if(user_is_logged_in()) {
+	// 	die(pr($user));
+	// } else {
+	// 	// die('You are not logged in');
+	// 	die(pr($user));
+	// }
 }
