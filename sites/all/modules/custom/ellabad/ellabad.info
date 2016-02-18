@@ -1,0 +1,8 @@
+name = Ellabad
+description = Elsayed ellabad module.
+package = Mohamed Elsayed Drupal 7 Development
+core = 7.x
+files[] = ellabad.module
+
+;dependencies[] = autoload
+;php = 5.3

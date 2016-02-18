@@ -1,0 +1,16 @@
+<?php /**
+ * @author Author "Elsayed Ellabad"  
+ * @author Author Email "ellabafci@yahoo.com"
+ * @copyright Copyright (c) 2015 Programming by "http://www.mohamedelsayed.net"
+ */
+// module_load_include('inc', 'content', 'includes/password');
+function ellabad_init(){
+	
+}
+function elabad_menu() {
+
+    return $items;
+}
+
+function ellabad_form_alter(&$form, &$form_state, $form_id){
+}
