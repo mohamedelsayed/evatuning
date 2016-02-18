@@ -1134,7 +1134,7 @@ function elsayed_get_articles($limit = 0, $page = 1){
 function elsayed_cart(){
     if(!user_is_logged_in()){
         $redirect = $GLOBALS['base_url'].'#sign-in';
-        drupal_goto("$redirect");  
+        drupal_goto("$redirect");
     }
     $output = '';
     return $output; 	
