@@ -9,7 +9,15 @@ function ellabad_init(){
 	//ellabad_save_order();
 	//ellabad_check_order_item_valid(219, 3, 1);
 	// ellabad_make_cart_ordered(1, 1);
-	//ellabad_save_order();
+	ellabad_save_order('eee');
+	// ellabad_test();
+	// ellabad_get_cart_item_quantity(218, 1, 0);
+	// ellabad_clear_cookie_items();
+	// die(pr($_COOKIE));
+	//die(pr(json_decode($_COOKIE['cart_products'])));
+	
+
+
 }
 function elabad_menu() {
 
@@ -25,6 +33,7 @@ function ellabad_form_alter(&$form, &$form_state, $form_id){
  */ 
 function ellabad_test() {
 
+	// die(pr($_COOKIE));
 	// $_SESSION['id'] = 'my-id';
 	// // die(pr($_SESSION));
 	// global $user;
@@ -141,26 +150,27 @@ function ellabad_save_order($item_transaction) {
 		$updated = 0;
 		$paypal_transaction_id = '';
 
-		if(isset($_COOKIE['phone'])) {
-			$phone = $_COOKIE['phone'];
+		// die(pr($_COOKIE));
+		if(isset($_COOKIE['cart_phone'])) {
+			$phone = $_COOKIE['cart_phone'];
 		}
-		if(isset($_COOKIE['address1'])) {
-			$address1 = $_COOKIE['address1'];
+		if(isset($_COOKIE['cart_address1'])) {
+			$address1 = $_COOKIE['cart_address1'];
 		}
-		if(isset($_COOKIE['address2'])) {
-			$address2 = $_COOKIE['address2'];
+		if(isset($_COOKIE['cart_address2'])) {
+			$address2 = $_COOKIE['cart_address2'];
 		}
-		if(isset($_COOKIE['country'])) {
-			$country = $_COOKIE['country'];
+		if(isset($_COOKIE['cart_country'])) {
+			$country = $_COOKIE['cart_country'];
 		}
-		if(isset($_COOKIE['city'])) {
-			$city = $_COOKIE['city'];
+		if(isset($_COOKIE['cart_city'])) {
+			$city = $_COOKIE['cart_city'];
 		}
-		if(isset($_COOKIE['zip'])) {
-			$city = $_COOKIE['zip'];
+		if(isset($_COOKIE['cart_zip'])) {
+			$city = $_COOKIE['cart_zip'];
 		}
-		if(isset($_COOKIE['country'])) {
-			$city = $_COOKIE['country'];
+		if(isset($_COOKIE['cart_country'])) {
+			$city = $_COOKIE['cart_country'];
 		}
 
 		//function to call when we need
@@ -190,25 +200,35 @@ function ellabad_save_order($item_transaction) {
 
 	        ellabad_make_cart_ordered($uid, $order_id);
 
+		} else {
+			//Get all cart items and compare with ordered items and update quantity if it is changed
+			$all_cart_items = array();
+	    	$all_cart_items = elsayed_get_cart_query($uid);
+
+	    	$ordered_items = json_decode($_COOKIE['cart_products']);
+	    	foreach ($all_cart_items as $key => $item) {
+	    		$item_quntity = ellabad_get_cart_item_quantity($item->nid, $item->uid, 0);
+	    		//$item_quntity_ordered = 89;
+	    		$item_nid = $item->nid;
+	    		$item_quntity_ordered =  $ordered_items->$item_nid;
+	    		// die($item_quntity_ordered);
+
+	    		if($item->quantity != $item_quntity_ordered) {
+	    			ellabad_update_cart_changed_item_quantity($item->nid, $item_quntity_ordered, $item->uid );
+	    		}
+	    	}
 		}
 
 		
 
 	    //Get all cart items
 	    //Loop through all of [json_decode($_COOKIE['cart_products'])]
-	    $all_cart_items = array();
-	    $all_cart_items = elsayed_get_cart_query($uid);
+	    // $all_cart_items = array();
+	    // $all_cart_items = elsayed_get_cart_query($uid);
 	}
 	    
 
 }
-
-function ellabad_check_order_item_valid($product_id, $quantity, $uid) {
-	$order_item = db_query('SELECT * FROM {orders_products} WHERE (nid = :nid) AND (quantity = :quantity) AND (uid = :uid) AND (order_id = 0) ', 
-        array(':nid' => $product_id,':quantity' => $quantity, ':uid' => $uid))->fetchObject();
-	
-}
-
 /*
 * Function to update all cart items to be ordered if make order success
 */
@@ -227,6 +247,7 @@ function ellabad_make_cart_ordered($uid = 0, $order_id = 0) {
                         'order_id' => $order_id,
                     ))
                     ->condition('uid', $cart_item->uid, '=')
+                    ->condition('order_id', 0, '=')
                     ->execute();
         	}
         }
@@ -236,7 +257,7 @@ function ellabad_make_cart_ordered($uid = 0, $order_id = 0) {
 /*
 * Function to update quantity ofproduct  of cart if it changed during payment cycle
 */
-function ellabad_update_cart_changed_item_quantity($nid = 0, $quantity = 0, $uid = 0) {
+function ellabad_update_cart_changed_item_quantity($nid = 0, $quantity = 0  ,$uid = 0) {
     // if($uid == 0){
     //     global $user;
     //     $uid = $user->uid;
@@ -253,3 +274,28 @@ function ellabad_update_cart_changed_item_quantity($nid = 0, $quantity = 0, $uid
 	
     }
 }
+/*
+* function to update cart item quantity if it is updated during payment
+*/
+function ellabad_get_cart_item_quantity($item_id, $uid, $order_id = 0) {
+	$item_quntity = db_query('SELECT quantity FROM {orders_products} WHERE (nid = :nid) AND (uid = :uid) AND (uid = :uid) AND (order_id = :order_id) ', 
+        array(':nid' => $item_id,':uid' => $uid, 'order_id' => $order_id))->fetchField();
+	return $item_quntity;
+}
+/*
+* function to clear cookie items
+*/
+function ellabad_clear_cookie_items() {
+	unset($_COOKIE['cart_products']);
+	unset($_COOKIE['cart_phone']);
+	unset($_COOKIE['cart_address1']);
+	unset($_COOKIE['cart_address2']);
+	unset($_COOKIE['cart_zip']);
+	unset($_COOKIE['cart_city']);
+	unset($_COOKIE['cart_amount']);
+	unset($_COOKIE['cart_currency_code']);
+	unset($_COOKIE['cart_business']);
+	
+}
+
+ 
