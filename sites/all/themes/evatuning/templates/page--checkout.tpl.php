@@ -41,6 +41,9 @@ $actual_link = elsayed_get_actual_link();?>
             $options = country_get_list();
             $country_code = elsayed_ip_info("Visitor");?>
             <form onsubmit="return validate_custom_checkout_form()" id="paypal_form" action="<?php echo $paypal_url;?>" method="post">
+                
+                <!-- <input type='hidden' name='rm' value='2'> -->
+
                 <input type="hidden" name="cmd" value="_xclick">
                 <input type="hidden" name="business" value="<?php echo $paypal_id;?>">
                 <input type="hidden" name="item_name" value="<?php echo variable_get('site_name').' Products';?>">
