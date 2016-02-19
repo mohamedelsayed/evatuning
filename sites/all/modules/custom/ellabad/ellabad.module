@@ -9,7 +9,7 @@ function ellabad_init(){
 	//ellabad_save_order();
 	//ellabad_check_order_item_valid(219, 3, 1);
 	// ellabad_make_cart_ordered(1, 1);
-	ellabad_save_order('eee');
+	//ellabad_save_order('eee');
 	// ellabad_test();
 	// ellabad_get_cart_item_quantity(218, 1, 0);
 	// ellabad_clear_cookie_items();
