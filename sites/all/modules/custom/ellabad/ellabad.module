@@ -109,18 +109,15 @@ function ellabad_update_7100() {
     );
     db_create_table('orders', $schema);
 }
-
 /**
  * @param 
  * @return 
  * This is a test function
  */ 
 function ellabad_save_order($item_transaction) {
-
 	if(user_is_logged_in()) {
 		global $user;
 		$uid = $user->uid;
-
 		$status = 0;
 		$phone = '';
 		$address1 = '';
@@ -150,7 +147,6 @@ function ellabad_save_order($item_transaction) {
 		if(isset($_COOKIE['cart_zip'])) {
 			$zip = $_COOKIE['cart_zip'];
 		}
-
 		//function to call when we need
 	    $cart_summary = elsayed_get_cart_summary();
 	    $cart_price = $cart_summary['price'];
@@ -158,7 +154,6 @@ function ellabad_save_order($item_transaction) {
 		if(isset($_COOKIE['cart_amount'])) {
 			$paid_cart_ammount = $_COOKIE['cart_amount'];
 		}
-
 		$order_info = array(
 			'uid' => $uid,
             'status' => $status,
@@ -185,21 +180,23 @@ function ellabad_save_order($item_transaction) {
 	    	foreach ($all_cart_items as $key => $item) {
 	    		$item_quntity = $item->quantity;
 	    		$item_nid = $item->nid;
-	    		if($ordered_items->$item_nid != '') {
+                if(isset($ordered_items->$item_nid)){
 		    		$item_quntity_ordered =  $ordered_items->$item_nid;
-
 		    		if($item->quantity != $item_quntity_ordered) {
 		    			ellabad_update_cart_changed_item_quantity($item->nid, $item_quntity_ordered, $item->uid );
 		    		}
+		    	}else{
+		    	    $num_deleted = db_delete('orders_products')
+                      ->condition('uid', $item->uid)
+                      ->condition('order_id', 0)
+                      ->condition('nid', $item->nid)
+                      ->execute();		    	    
 		    	}
 	    	}
 			//Make new order with information received and update cart items
-			ellabad_make_order($order_info);
-	    	 
+			ellabad_make_order($order_info);	    	 
 		}
 	}
-	    
-
 }
 /*
 * Function to update all cart items to be ordered if make order success
@@ -220,7 +217,6 @@ function ellabad_make_cart_ordered($uid = 0, $order_id = 0) {
                 ->execute();
     }
 }
-
 /*
 * Function to update quantity ofproduct  of cart if it changed during payment cycle
 */
@@ -233,8 +229,7 @@ function ellabad_update_cart_changed_item_quantity($nid = 0, $quantity = 0  ,$ui
             ->condition('nid', $nid, '=')
             ->condition('uid', $uid, '=')            
             ->condition('order_id', 0, '=') 
-            ->execute();
-	
+            ->execute();	
     }
 }
 /*
