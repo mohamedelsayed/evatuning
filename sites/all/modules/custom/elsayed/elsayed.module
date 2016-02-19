@@ -1233,3 +1233,15 @@ function elsayed_ip_info($ip = NULL, $deep_detect = TRUE) {
     }
     return $output;
 }
+function elsayed_get_cart_json(){
+    $records = elsayed_get_cart();
+    $data = array();
+    if(!empty($records)){
+        foreach ($records as $key => $record) {
+            $quantity = $record->quantity;                 
+            $nid = $record->nid;	
+            $data[$nid] = $quantity;
+        }
+    }
+    return json_encode($data);
+}

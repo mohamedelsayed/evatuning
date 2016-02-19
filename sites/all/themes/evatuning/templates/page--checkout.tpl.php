@@ -5,8 +5,8 @@
  * @copyright Copyright (c) 2016 Programming by "http://www.mohamedelsayed.net"
  */?>
 <?php $base_url_with_lang = elsayed_get_base_url_with_lang();
-$actual_link = elsayed_get_actual_link();?>
-<?php if (user_is_logged_in()) {?>
+$actual_link = elsayed_get_actual_link();
+if (user_is_logged_in()) {?>
     <?php include_once 'header.php';?>
     <div id="products-post">
         <div class="container">
@@ -29,14 +29,15 @@ $actual_link = elsayed_get_actual_link();?>
                     $symbol = $default_currency->field_symbol[LANGUAGE_NONE][0]['value'];
                 }
                 global $user;
+                $user_data = user_load($user->uid);
                 $email = $user->mail;
                 $field_first_name = '';
-                if(isset($user->field_first_name[LANGUAGE_NONE][0]['value'])){
-                    $field_first_name = $user->field_first_name[LANGUAGE_NONE][0]['value'];
+                if(isset($user_data->field_first_name[LANGUAGE_NONE][0]['value'])){
+                    $field_first_name = $user_data->field_first_name[LANGUAGE_NONE][0]['value'];
                 }
                 $field_last_name = '';
-                if(isset($user->field_last_name[LANGUAGE_NONE][0]['value'])){
-                    $field_last_name = $user->field_last_name[LANGUAGE_NONE][0]['value'];
+                if(isset($user_data->field_last_name[LANGUAGE_NONE][0]['value'])){
+                    $field_last_name = $user_data->field_last_name[LANGUAGE_NONE][0]['value'];
                 }
                 require_once DRUPAL_ROOT . '/includes/locale.inc';
                 $options = country_get_list();
@@ -46,7 +47,8 @@ $actual_link = elsayed_get_actual_link();?>
                 $symbol = '';
                 if(isset($current_currency->field_symbol[LANGUAGE_NONE][0]['value'])){
                     $symbol = $current_currency->field_symbol[LANGUAGE_NONE][0]['value'];
-                }?>
+                }
+                $products_json = elsayed_get_cart_json();?>
                 <form onsubmit="return validate_custom_checkout_form()" id="paypal_form" action="<?php echo $paypal_url;?>" method="post">
                     <?php /*<input type="hidden" name="no_shipping" value="1">
                     <input type="hidden" name="item_number" value="1">*//*?>
@@ -88,9 +90,10 @@ $actual_link = elsayed_get_actual_link();?>
     </div>    
     <?php include_once 'footer.php';?>
     <script type="text/javascript">
-    var paypal_id = '<?php echo $paypal_id;?>';    
-    var amount = '<?php echo $cart_summary['price'];?>';
+    var paypal_id = "<?php echo $paypal_id;?>";    
+    var amount = "<?php echo $cart_summary['price'];?>";
     var currency_code = "<?php echo $symbol;?>";
+    var products_json = '<?php echo $products_json;?>';
     </script>
 <?php }else{
     drupal_access_denied();
