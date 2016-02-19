@@ -199,6 +199,7 @@ function ellabad_save_order($item_transaction) {
 	        ))->execute();
 
 	        ellabad_make_cart_ordered($uid, $order_id);
+	        ellabad_clear_cookie_items();
 
 		} else {
 			//Get all cart items and compare with ordered items and update quantity if it is changed
@@ -233,6 +234,7 @@ function ellabad_save_order($item_transaction) {
 	        ))->execute();
 
 	        ellabad_make_cart_ordered($uid, $order_id);
+	        ellabad_clear_cookie_items();	        
 		}
 
 		
