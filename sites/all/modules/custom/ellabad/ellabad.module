@@ -15,9 +15,6 @@ function ellabad_init(){
 	// ellabad_clear_cookie_items();
 	//die(pr($_COOKIE));
 	//die(pr(json_decode($_COOKIE['cart_products'])));
-	
-
-
 }
 function elabad_menu() {
 
@@ -32,18 +29,6 @@ function ellabad_form_alter(&$form, &$form_state, $form_id){
  * This is a test function
  */ 
 function ellabad_test() {
-
-	// die(pr($_COOKIE));
-	// $_SESSION['id'] = 'my-id';
-	// // die(pr($_SESSION));
-	// global $user;
-	// // die(pr($user));
-	// if(user_is_logged_in()) {
-	// 	die(pr($user));
-	// } else {
-	// 	// die('You are not logged in');
-	// 	die(pr($user));
-	// }
 }
 /*
 * function to create orders table
@@ -147,10 +132,9 @@ function ellabad_save_order($item_transaction) {
 		$city =  '';
 		$zip = '';
 		$created = time();
-		$updated = 0;
+		$updated = time();
 		$paypal_transaction_id = '';
 
-		// die(pr($_COOKIE));
 		if(isset($_COOKIE['cart_phone'])) {
 			$phone = $_COOKIE['cart_phone'];
 		}
@@ -167,10 +151,7 @@ function ellabad_save_order($item_transaction) {
 			$city = $_COOKIE['cart_city'];
 		}
 		if(isset($_COOKIE['cart_zip'])) {
-			$city = $_COOKIE['cart_zip'];
-		}
-		if(isset($_COOKIE['cart_country'])) {
-			$city = $_COOKIE['cart_country'];
+			$zip = $_COOKIE['cart_zip'];
 		}
 
 		//function to call when we need
@@ -180,61 +161,44 @@ function ellabad_save_order($item_transaction) {
 		if(isset($_COOKIE['cart_amount'])) {
 			$paid_cart_ammount = $_COOKIE['cart_amount'];
 		}
-		//die(pr($_COOKIE));
+
+		$order_info = array(
+			'uid' => $uid,
+            'status' => $status,
+            'phone' => $phone,
+            'address1' => $address1,
+            'address2' => $address2,
+            'country' => $country,
+            'city' => $city,
+            'zip' => $zip,
+            'created' => $created,
+            'updated' => $updated,
+            'paypal_transaction_id' => $paypal_transaction_id
+	    );
 		//if amount not changed
 		if($cart_price == $paid_cart_ammount) {
-			$order_id = db_insert('orders')
-	        ->fields(array(
-	            'uid' => $uid,
-	            'status' => $status,
-	            'phone' => $phone,
-	            'address1' => $address1,
-	            'address2' => $address2,
-	            'country' => $country,
-	            'city' => $city,
-	            'zip' => $zip,
-	            'created' => $created,
-	            'updated' => $updated,
-	            'paypal_transaction_id' => $paypal_transaction_id
-	        ))->execute();
-
-	        ellabad_make_cart_ordered($uid, $order_id);
-	        ellabad_clear_cookie_items();
-
+			//Make new order with information received and update cart items
+			ellabad_make_order($order_info);
 		} else {
 			//Get all cart items and compare with ordered items and update quantity if it is changed
 			$all_cart_items = array();
 	    	$all_cart_items = elsayed_get_cart_query($uid);
-
+	    	//get all cookie items
 	    	$ordered_items = json_decode($_COOKIE['cart_products']);
 	    	foreach ($all_cart_items as $key => $item) {
-	    		$item_quntity = ellabad_get_cart_item_quantity($item->nid, $item->uid, 0);
+	    		$item_quntity = $item->quantity;
 	    		$item_nid = $item->nid;
-	    		$item_quntity_ordered =  $ordered_items->$item_nid;
+	    		if($ordered_items->$item_nid != '') {
+		    		$item_quntity_ordered =  $ordered_items->$item_nid;
 
-
-	    		if($item->quantity != $item_quntity_ordered) {
-	    			ellabad_update_cart_changed_item_quantity($item->nid, $item_quntity_ordered, $item->uid );
-	    		}
+		    		if($item->quantity != $item_quntity_ordered) {
+		    			ellabad_update_cart_changed_item_quantity($item->nid, $item_quntity_ordered, $item->uid );
+		    		}
+		    	}
 	    	}
-
-	    	$order_id = db_insert('orders')
-	        ->fields(array(
-	            'uid' => $uid,
-	            'status' => $status,
-	            'phone' => $phone,
-	            'address1' => $address1,
-	            'address2' => $address2,
-	            'country' => $country,
-	            'city' => $city,
-	            'zip' => $zip,
-	            'created' => $created,
-	            'updated' => $updated,
-	            'paypal_transaction_id' => $paypal_transaction_id
-	        ))->execute();
-
-	        ellabad_make_cart_ordered($uid, $order_id);
-	        ellabad_clear_cookie_items();	        
+			//Make new order with information received and update cart items
+			ellabad_make_order($order_info);
+	    	 
 		}
 
 		
@@ -255,20 +219,16 @@ function ellabad_make_cart_ordered($uid = 0, $order_id = 0) {
         global $user;
         $uid = $user->uid;
     }
-    if($uid != 0 and $order_id != 0){
-    	//get all items in the cart
-        $cart_items = elsayed_get_cart_query(1);
-        if(!empty($cart_items)) {
-        	foreach ($cart_items as $key => $cart_item) {
-        		db_update('orders_products')
-                    ->fields(array(
-                        'order_id' => $order_id,
-                    ))
-                    ->condition('uid', $cart_item->uid, '=')
-                    ->condition('order_id', 0, '=')
-                    ->execute();
-        	}
-        }
+    if($uid != 0 and $order_id != 0){   	
+       
+    	db_update('orders_products')
+                ->fields(array(
+                    'order_id' => $order_id,
+                ))
+                ->condition('uid', $uid, '=')
+                ->condition('order_id', 0, '=')
+                ->execute();
+    	}
     }
 }
 
@@ -276,10 +236,6 @@ function ellabad_make_cart_ordered($uid = 0, $order_id = 0) {
 * Function to update quantity ofproduct  of cart if it changed during payment cycle
 */
 function ellabad_update_cart_changed_item_quantity($nid = 0, $quantity = 0  ,$uid = 0) {
-    // if($uid == 0){
-    //     global $user;
-    //     $uid = $user->uid;
-    // }
     if($nid != 0 && $uid != 0){       
 		db_update('orders_products')
             ->fields(array(
@@ -316,4 +272,26 @@ function ellabad_clear_cookie_items() {
 	
 }
 
- 
+/*
+* Function to make order
+*/
+function ellabad_make_order($order_info) {
+	$order_id = db_insert('orders')
+        ->fields(array(
+            'uid' => $order_info['uid'],
+            'status' => $order_info['status'],
+            'phone' => $order_info['phone'],
+            'address1' => $order_info['address1'],
+            'address2' => $order_info['address2'],
+            'country' => $order_info['country'],
+            'city' => $order_info['city'],
+            'zip' => $order_info['zip'],
+            'created' => $order_info['created'],
+            'updated' => $order_info['updated'],
+            'paypal_transaction_id' => $order_info['paypal_transaction_id']
+        ))->execute();
+    
+    ellabad_make_cart_ordered($order_info['uid'], $order_id);
+	ellabad_clear_cookie_items();
+    
+}
