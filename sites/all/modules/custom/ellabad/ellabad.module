@@ -5,12 +5,9 @@
  */
 // module_load_include('inc', 'content', 'includes/password');
 function ellabad_init(){
-	// ellabad_test();
 	//ellabad_save_order();
-	//ellabad_check_order_item_valid(219, 3, 1);
 	// ellabad_make_cart_ordered(1, 1);
 	//ellabad_save_order('eee');
-	// ellabad_test();
 	// ellabad_get_cart_item_quantity(218, 1, 0);
 	// ellabad_clear_cookie_items();
 	//die(pr($_COOKIE));
@@ -200,13 +197,6 @@ function ellabad_save_order($item_transaction) {
 			ellabad_make_order($order_info);
 	    	 
 		}
-
-		
-
-	    //Get all cart items
-	    //Loop through all of [json_decode($_COOKIE['cart_products'])]
-	    // $all_cart_items = array();
-	    // $all_cart_items = elsayed_get_cart_query($uid);
 	}
 	    
 
@@ -219,7 +209,7 @@ function ellabad_make_cart_ordered($uid = 0, $order_id = 0) {
         global $user;
         $uid = $user->uid;
     }
-    if($uid != 0 and $order_id != 0){   	
+    if($uid != 0 and $order_id != 0){
        
     	db_update('orders_products')
                 ->fields(array(
@@ -228,7 +218,6 @@ function ellabad_make_cart_ordered($uid = 0, $order_id = 0) {
                 ->condition('uid', $uid, '=')
                 ->condition('order_id', 0, '=')
                 ->execute();
-    	}
     }
 }
 
