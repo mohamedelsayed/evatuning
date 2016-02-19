@@ -32,3 +32,85 @@ function ellabad_test() {
 	// 	die(pr($user));
 	// }
 }
+/*
+* function to create orders table
+*/
+function ellabad_update_7100() {
+    $schema = array(
+        'fields' => array(
+            'id' => array(
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+            ),
+            'uid' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => '0',
+            ),
+            'status' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => '0',
+            ),            
+            'phone' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'address1' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'address2' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'country' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'city' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'zip' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'created' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => '0',
+            ),
+            'updated' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => '0',
+            ),
+            'paypal_transaction_id' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+        ),
+        'primary key' => array('id'),
+    );
+    db_create_table('orders', $schema);
+}
