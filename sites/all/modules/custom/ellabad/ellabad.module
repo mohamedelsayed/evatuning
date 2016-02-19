@@ -10,10 +10,26 @@ function ellabad_init(){
 	//ellabad_save_order('eee');
 	// ellabad_get_cart_item_quantity(218, 1, 0);
 	// ellabad_clear_cookie_items();
-	//die(pr($_COOKIE));
+	//(pr($_COOKIE));
 	//die(pr(json_decode($_COOKIE['cart_products'])));
 }
-function elabad_menu() {
+function ellabad_menu() {
+	$items['admin/custom/orders/%/%'] = array(
+		'title' => 'All Orders',
+		'page callback' => 'ellabad_list_orders_with_pager_content',
+		'page arguments' => array(3, 4),
+        'type' => MENU_CALLBACK,
+		'access arguments' => array('access content'),
+		//'weight' => -14,
+	);
+	$items['admin/custom/order/%'] = array(
+		'title' => 'View Order',
+		'page callback' => 'ellabad_view_order',
+		'page arguments' => array(3),
+        'type' => MENU_CALLBACK,
+		'access arguments' => array('access content'),
+		//'weight' => -14,
+	);
 
     return $items;
 }
@@ -278,4 +294,69 @@ function ellabad_make_order($order_info) {
     ellabad_make_cart_ordered($order_info['uid'], $order_id);
 	ellabad_clear_cookie_items();
     
+}
+/*
+* Function to list all orders with page contnent
+*/
+function ellabad_list_orders_with_pager_content() {
+	$header = array(
+		//array('data' => t('Weight'), 'field' => 'weight', 'sort' => 'asc'),
+		//array('data' => t('id'), 'field' => 'domain_id', 'sort' => 'desc'),
+		array('data' => t('Order ID')),
+		array('data' => t('Status')),
+		array('data' => t('Operations')),
+	);
+	global $base_url;
+	$status = arg(3);
+	$uid = arg(4);
+	$query = db_select('orders', 'o');
+	$query->fields('o', array('id', 'status' ));
+	if($status != ''){
+		$query->condition('o.status', $status, '=');
+	}
+	if($uid != ''){
+		$query->condition('o.uid', $uid, '=');
+	}
+	$table_sort = $query->extend('TableSort') // Add table sort extender.
+		->orderByHeader($header); // Add order by headers.
+		$pager = $table_sort->extend('PagerDefault')
+		->limit(20);
+	$result = $pager->execute();
+	$rows = array();
+	$output = '<ul class="action-links"><li><a href="">Add new</a></li></ul>';
+	foreach($result as $res){
+		$rows[] = array($res->id, ellabad_get_order_status($res->status), "<a href='$base_url/admin/custom/order/$res->id'>View</a>");		
+	}
+	// If rows are not empty theme and display the rows.
+	if (!empty($rows)){
+		$output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'sort-table')));
+		$output .= theme('pager');
+	}else{
+		$output .= t("No results found.");
+	}
+
+	return $output;
+}
+/*
+* Function to return order status text
+*/
+function ellabad_get_order_status($order_status) {
+	$status = '';
+	if($order_status != ''){
+		if($order_status == 0){
+			$status = 'Pending';
+		} elseif($order_status == 1){
+			$status = 'Active';
+		} else {
+			$status = 'Cancelled';
+		}
+	}
+	return $status;
+}
+
+/*
+* Function to view order page informtion
+*/
+function ellabad_view_order() {
+	return 'Welcome to order no'.arg(3);
 }
