@@ -232,6 +232,9 @@ function validate_custom_checkout_form(){
 		jQuery("#paypal_form input").each(function(){
 			createCookie('cart_'+jQuery(this).attr('name'), jQuery(this).val());
 		});
+		jQuery("#paypal_form select").each(function(){
+			createCookie('cart_'+jQuery(this).attr('name'), jQuery(this).val());
+		});
 		return true;
 		//return false;
 	}else{
