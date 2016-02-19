@@ -12,6 +12,7 @@ function ellabad_init(){
 	// ellabad_clear_cookie_items();
 	//(pr($_COOKIE));
 	//die(pr(json_decode($_COOKIE['cart_products'])));
+	//ellabad_get_order_details(37);
 }
 function ellabad_menu() {
 	$items['admin/custom/orders'] = array(
@@ -26,6 +27,30 @@ function ellabad_menu() {
 		'title' => 'View Order',
 		'page callback' => 'ellabad_view_order',
 		'page arguments' => array(3),
+        'type' => MENU_CALLBACK,
+		'access arguments' => array('access content'),
+		//'weight' => -14,
+	);
+	$items['admin/custom/update_order_status/%/%'] = array(
+		'title' => 'View Order',
+		'page callback' => 'update_order_status',
+		'page arguments' => array(3, 4),
+        'type' => MENU_CALLBACK,
+		'access arguments' => array('access content'),
+		//'weight' => -14,
+	);
+	$items['my_orders'] = array(
+		'title' => 'My Orders',
+		'page callback' => 'ellabad_list_user_orders',
+		'page arguments' => array(),
+        'type' => MENU_CALLBACK,
+		'access arguments' => array('access content'),
+		//'weight' => -14,
+	);
+	$items['order_item/%'] = array(
+		'title' => 'Order Item',
+		'page callback' => 'ellabad_view_order_front',
+		'page arguments' => array(1),
         'type' => MENU_CALLBACK,
 		'access arguments' => array('access content'),
 		//'weight' => -14,
@@ -295,7 +320,7 @@ function ellabad_make_order($order_info) {
     
 }
 /*
-* Function to list all orders with page contnent
+* Function to list all orders with page content for admin
 */
 function ellabad_list_orders_with_pager_content() {
 	if(elsayed_is_user_admin()){
@@ -350,6 +375,8 @@ function ellabad_list_orders_with_pager_content() {
 		}
 
 		return $output;
+	} else {
+		return "You are not authorized to access this page";
 	}
 }
 /*
@@ -374,7 +401,7 @@ function ellabad_get_order_status($order_status) {
 */
 function ellabad_get_user_realname($uid) {
 	$realname = '';
-	if($uid !=0){
+	if($uid != 0){
 		$user_data = user_load($uid);
 		if(isset($user_data->realname)) {
 			$realname = $user_data->realname;
@@ -384,8 +411,173 @@ function ellabad_get_user_realname($uid) {
 }
 
 /*
-* Function to view order page informtion
+* Function to view admin order page informtion
 */
 function ellabad_view_order() {
-	return 'Welcome to order no'.arg(3);
+	if(elsayed_is_user_admin()){
+		$order_id = arg(3);
+		global $base_url;
+		//get order iformation
+		$order = ellabad_get_order_details($order_id);
+
+		$order_id =  $order['info']->id;
+		$order_status = $order['info']->status;
+		$status_button ='Make active';
+		$status_val = 1;
+		if($order_status == 1){
+			$status_button ='Make Pending';
+			$status_val = 0;
+		}
+
+		$output = '<ul class="action-links">
+			<li><a href="'.$base_url.'/admin/custom/orders">List all orders</a></li>
+			<li><a href="'.$base_url.'/admin/custom/update_order_status/'.$order_id.'/'.$status_val.'">'.$status_button.'</a></li>
+			</ul>';
+
+		$output .= "<br><b> Order basic info</b>";
+        $output .= "
+        		<p> <b>Id</b> : ".$order['info']->id." </p>
+        		<p> <b>user</b> : ".ellabad_get_user_realname($order['info']->uid)." </p>
+        		<p> <b>status</b> : ".ellabad_get_order_status($order['info']->status)." </p>
+        		<p> <b>phone</b> : ".$order['info']->phone." </p>
+        		<p> <b>Address1</b> : ".$order['info']->address1." </p>
+        		<p> <b>address2</b> : ".$order['info']->address2." </p>
+        	";
+
+        $output .= "<br><b> Order owner info</b>";
+        $output .= "
+        		<p> <b>Id</b> : ".$order['user']->uid." </p>
+        		<p> <b>username</b> : ".$order['user']->name." </p>
+        		<p> <b>mail</b> : ".$order['user']->mail." </p>
+        	";
+
+        // die(pr($order['items']));
+        if(!empty($order['items'])){
+        	$output .= "<br><b> Order items</b>";
+        	foreach ($order['items'] as $key => $item) {
+        		$output .= "<br><b> Order item ".++$key."</b>";
+        		$output .= "
+	        		<p> <b>Id</b> : ".$item->nid." </p>
+	        		<p> <b>Title</b> : ".$item->title." </p>
+	        		<p> <b>Quantity</b> : ".$item->quantity." </p>
+	        		<p> <b>Price</b> : ".$item->price." </p>
+
+	        	";
+        		
+        	}
+        }
+
+		return $output;
+	}
+}
+/**
+* function to get product details
+* @param $order_id
+* @return array containg course basic info and owner as object and order items as array
+*/
+function ellabad_get_order_details($order_id) {
+	$order = array();
+	if($order_id != 0) {
+		//get order basic information
+		$order_info = db_query('SELECT * FROM {orders} WHERE (id = :id)', 
+        array(':id' => $order_id))->fetchObject();
+        $order['info'] = $order_info;
+        //get owner of the order
+        $order['user'] = user_load($order_info->uid);
+        //get order items
+        $order['items'] = ellabad_get_order_items_details($order_id);
+	}
+	return $order;
+	
+}
+/*
+* Function to get order items details
+*/
+function ellabad_get_order_items_details($order_id) {
+	$ordered_items_data = array();
+	$ordered_items_data =  db_query('SELECT n.nid, n.title, op.quantity, op.price  FROM {node} n, {orders_products} op WHERE (n.nid = op.nid) AND (op.order_id = :order_id)', 
+        array(':order_id' => $order_id))->fetchALL();	
+	
+	return $ordered_items_data;
+}
+
+/*
+* Function to list all orders of logged-in user
+*/
+function ellabad_list_user_orders() {
+	global $user;
+	if(user_is_logged_in() && $user->uid != 0){
+		
+		$uid = $user->uid;
+		$header = array(
+			//array('data' => t('Weight'), 'field' => 'weight', 'sort' => 'asc'),
+			//array('data' => t('id'), 'field' => 'domain_id', 'sort' => 'desc'),
+			array('data' => t('Order ID')),
+			array('data' => t('User Name')),		
+			array('data' => t('Status')),
+			array('data' => t('Operations')),
+		);
+		global $base_url;
+		$status = arg(1);
+		$status_val = '';
+		if($status == 'active'){
+			$status_val = 1;
+		} else if($status == 'pending') {
+			$status_val = 0;
+		}
+		//$uid = arg(4);
+		$query = db_select('orders', 'o');
+		$query->condition('o.uid', $uid, '=');
+
+		//$query->join('users', 'u', 'o.uid= u.uid');
+		$query->fields('o', array('id', 'uid', 'status' ));
+		if($status == 'active' || $status =='pending' ){
+			$query->condition('o.status', $status_val, '=');
+		}
+		$table_sort = $query->extend('TableSort') // Add table sort extender.
+			->orderByHeader($header); // Add order by headers.
+			$pager = $table_sort->extend('PagerDefault')
+			->limit(20);
+		$result = $pager->execute();
+		$rows = array();
+		$output = '<ul class="action-links">
+			<li><a href="'.$base_url.'/my_orders/all">All</a></li>
+			<li><a href="'.$base_url.'/my_orders/active">Active</a></li>
+			<li><a href="'.$base_url.'/my_orders/pending">Pending</a></li>
+			</ul>';
+		foreach($result as $res){
+			$rows[] = array($res->id, ellabad_get_user_realname($res->uid) ,ellabad_get_order_status($res->status), "<a href='$base_url/order_item/$res->id'>View</a>");		
+		}
+		// If rows are not empty theme and display the rows.
+		if (!empty($rows)){
+			$output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'sort-table')));
+			$output .= theme('pager');
+		}else{
+			$output .= t("No results found.");
+		}
+
+		return $output;
+	} else {
+		return "You are not authorized to access this page";
+	}
+}
+
+/*
+* Function to update order status
+*/
+function update_order_status() {
+	if(elsayed_is_user_admin()){
+		$order_id = arg(3);
+		$order_status = arg(4);
+		if($order_id != 0 && ($order_status == 0 || $order_status == 1 )) {
+			db_update('orders')
+                ->fields(array(
+                    'status' => $order_status,
+                ))
+                ->condition('id', $order_id, '=')
+                ->execute();
+		}
+		global $base_url;
+		drupal_goto("$base_url/admin/custom/order/$order_id");
+	}	
 }
