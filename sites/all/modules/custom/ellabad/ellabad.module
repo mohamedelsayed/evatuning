@@ -13,7 +13,7 @@ function ellabad_init(){
 	// ellabad_test();
 	// ellabad_get_cart_item_quantity(218, 1, 0);
 	// ellabad_clear_cookie_items();
-	// die(pr($_COOKIE));
+	//die(pr($_COOKIE));
 	//die(pr(json_decode($_COOKIE['cart_products'])));
 	
 
@@ -208,15 +208,31 @@ function ellabad_save_order($item_transaction) {
 	    	$ordered_items = json_decode($_COOKIE['cart_products']);
 	    	foreach ($all_cart_items as $key => $item) {
 	    		$item_quntity = ellabad_get_cart_item_quantity($item->nid, $item->uid, 0);
-	    		//$item_quntity_ordered = 89;
 	    		$item_nid = $item->nid;
 	    		$item_quntity_ordered =  $ordered_items->$item_nid;
-	    		// die($item_quntity_ordered);
+
 
 	    		if($item->quantity != $item_quntity_ordered) {
 	    			ellabad_update_cart_changed_item_quantity($item->nid, $item_quntity_ordered, $item->uid );
 	    		}
 	    	}
+
+	    	$order_id = db_insert('orders')
+	        ->fields(array(
+	            'uid' => $uid,
+	            'status' => $status,
+	            'phone' => $phone,
+	            'address1' => $address1,
+	            'address2' => $address2,
+	            'country' => $country,
+	            'city' => $city,
+	            'zip' => $zip,
+	            'created' => $created,
+	            'updated' => $updated,
+	            'paypal_transaction_id' => $paypal_transaction_id
+	        ))->execute();
+
+	        ellabad_make_cart_ordered($uid, $order_id);
 		}
 
 		
