@@ -9,7 +9,7 @@ $actual_link = elsayed_get_actual_link();?>
                 <div class="col-md-6">
                     <div class="home-account">
                         <a href="<?php echo $GLOBALS['base_url'];?>"><?php echo t('Home');?></a>
-                    <?php if (!user_is_logged_in()) { ?>
+                        <?php if (!user_is_logged_in()) { ?>
                             <a id="sign-in" class="sign-in link" title="<?php echo t('Sign in'); ?>"><?php echo t('Sign in'); ?></a>
                             <a id="sign-up" class="sign-up link" title="<?php echo t('Sign up'); ?>"><?php echo t('Sign up'); ?></a>
                         <?php } else {

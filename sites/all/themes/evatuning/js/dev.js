@@ -211,7 +211,7 @@ function isNumeric(n) {
 }
 function validate_custom_checkout_form(){
 	var custom_course_form_error = 0;
-	var focused = 0;
+	var focused = 0;	
 	jQuery("#paypal_form input.required_input").each(function(){
 		validate_required_input(jQuery(this));
 	});
@@ -225,8 +225,25 @@ function validate_custom_checkout_form(){
 		}
 	});
 	if(custom_course_form_error === 0){
-		return true;
+		jQuery("#paypal_form input").each(function(){
+			createCookie('cart_'+jQuery(this).attr('name'), jQuery(this).val());
+		});
+		attach_hidden_input_to_paypal_form('business', paypal_id);
+		attach_hidden_input_to_paypal_form('amount', amount);
+		attach_hidden_input_to_paypal_form('currency_code', currency_code);		
+		//return true;
+		return false;
 	}else{
 		return false;
 	}
+}
+function createCookie (name, value) {
+	jQuery.cookie(name, value, {expires: 365, path: '/'});  
+}
+function attach_hidden_input_to_paypal_form (name, value) {
+	var hidden_input = jQuery("<input>")
+    .attr("type", "hidden")
+    .attr("name", name)
+    .attr("value", value);
+    jQuery('#paypal_form').append(jQuery(hidden_input));  
 }
