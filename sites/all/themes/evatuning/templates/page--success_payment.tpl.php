@@ -23,7 +23,7 @@ $actual_link = elsayed_get_actual_link();?>
             $item_transaction   = $_REQUEST['tx']; // Paypal transaction ID
             $item_price         = $_REQUEST['amt']; // Paypal received amount
             $item_currency      = $_REQUEST['cc']; // Paypal received currency type
-
+            ellabad_save_order($item_transaction);
             $price = '10.00';
             $currency='USD';
 
