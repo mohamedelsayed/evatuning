@@ -302,6 +302,7 @@ function ellabad_list_orders_with_pager_content() {
 		//array('data' => t('Weight'), 'field' => 'weight', 'sort' => 'asc'),
 		//array('data' => t('id'), 'field' => 'domain_id', 'sort' => 'desc'),
 		array('data' => t('Order ID')),
+		array('data' => t('User Name')),		
 		array('data' => t('Status')),
 		array('data' => t('Operations')),
 	);
@@ -313,11 +314,10 @@ function ellabad_list_orders_with_pager_content() {
 	} else if($status == 'pending') {
 		$status_val = 0;
 	}
-
 	$uid = arg(4);
 	$query = db_select('orders', 'o');
 	//$query->join('users', 'u', 'o.uid= u.uid');
-	$query->fields('o', array('id', 'status' ));
+	$query->fields('o', array('id', 'uid', 'status' ));
 	if($status == 'active' || $status =='pending' ){
 		$query->condition('o.status', $status_val, '=');
 	}
@@ -336,7 +336,7 @@ function ellabad_list_orders_with_pager_content() {
 		<li><a href="'.$base_url.'/admin/custom/orders/pending">Pending</a></li>
 		</ul>';
 	foreach($result as $res){
-		$rows[] = array($res->id, ellabad_get_order_status($res->status), "<a href='$base_url/admin/custom/order/$res->id'>View</a>");		
+		$rows[] = array($res->id, ellabad_get_user_realname($res->uid) ,ellabad_get_order_status($res->status), "<a href='$base_url/admin/custom/order/$res->id'>View</a>");		
 	}
 	// If rows are not empty theme and display the rows.
 	if (!empty($rows)){
@@ -363,6 +363,20 @@ function ellabad_get_order_status($order_status) {
 		}
 	}
 	return $status;
+}
+
+/*
+* Function to return user realname
+*/
+function ellabad_get_user_realname($uid) {
+	$realname = '';
+	if($uid !=0){
+		$user_data = user_load($uid);
+		if(isset($user_data->realname)) {
+			$realname = $user_data->realname;
+		}
+	}
+	return $realname;
 }
 
 /*
