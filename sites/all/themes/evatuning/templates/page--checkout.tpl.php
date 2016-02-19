@@ -68,6 +68,7 @@ if (user_is_logged_in()) {?>
                     <input type="text" placeholder="Phone" name="phone" value="" class="required_input"> 
                     <input type="text" placeholder="Address" name="address1" value="" class="required_input">
                     <input type="text" placeholder="Address 2" name="address2" value="">
+                    <input type='hidden' name='rm' value='2'>
                     <div class="select_country">
                         <select name="country">
                             <?php foreach ($options as $key => $option) {
