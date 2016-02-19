@@ -30,7 +30,6 @@ function ellabad_menu() {
 		'access arguments' => array('access content'),
 		//'weight' => -14,
 	);
-
     return $items;
 }
 
