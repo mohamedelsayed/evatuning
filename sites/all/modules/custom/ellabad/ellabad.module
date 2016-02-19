@@ -6,6 +6,10 @@
 // module_load_include('inc', 'content', 'includes/password');
 function ellabad_init(){
 	// ellabad_test();
+	//ellabad_save_order();
+	//ellabad_check_order_item_valid(219, 3, 1);
+	// ellabad_make_cart_ordered(1, 1);
+	ellabad_save_order();
 }
 function elabad_menu() {
 
@@ -113,4 +117,101 @@ function ellabad_update_7100() {
         'primary key' => array('id'),
     );
     db_create_table('orders', $schema);
+}
+
+/**
+ * @param 
+ * @return 
+ * This is a test function
+ */ 
+function ellabad_save_order() {
+
+	if(user_is_logged_in()) {
+		global $user;
+		$uid = $user->uid;
+		
+		$status = 0;
+		$phone = '';
+		$address1 = '';
+		$address2 = '';
+		$country = '';
+		$city =  '';
+		$zip = '';
+		$created = time();
+		$updated = 0;
+		$paypal_transaction_id = '';
+
+		$order_id = db_insert('orders')
+	        ->fields(array(
+	            'uid' => $uid,
+	            'status' => $status,
+	            'phone' => $phone,
+	            'address1' => $address1,
+	            'address2' => $address2,
+	            'country' => $country,
+	            'city' => $city,
+	            'zip' => $zip,
+	            'created' => $created,
+	            'updated' => $updated,
+	            'paypal_transaction_id' => $paypal_transaction_id
+	        ))->execute();
+
+	    //Get all cart items
+	    $all_cart_items = array();
+	    $all_cart_items = elsayed_get_cart_query($uid);
+
+	    //function to call when we need
+	}
+
+}
+
+function ellabad_check_order_item_valid($product_id, $quantity, $uid) {
+	$order_item = db_query('SELECT * FROM {orders_products} WHERE (nid = :nid) AND (quantity = :quantity) AND (uid = :uid) AND (order_id = 0) ', 
+        array(':nid' => $product_id,':quantity' => $quantity, ':uid' => $uid))->fetchObject();
+	
+}
+
+/*
+* Function to update all cart items to be ordered if make order success
+*/
+function ellabad_make_cart_ordered($uid = 0, $order_id = 0) {
+    if($uid == 0){
+        global $user;
+        $uid = $user->uid;
+    }
+    if($uid != 0 and $order_id != 0){
+    	//get all items in the cart
+        $cart_items = elsayed_get_cart_query(1);
+        if(!empty($cart_items)) {
+        	foreach ($cart_items as $key => $cart_item) {
+        		db_update('orders_products')
+                    ->fields(array(
+                        'order_id' => $order_id,
+                    ))
+                    ->condition('uid', $cart_item->uid, '=')
+                    ->execute();
+        	}
+        }
+    }
+}
+
+/*
+* Function to update quantity ofproduct  of cart if it changed during payment cycle
+*/
+function ellabad_update_cart_changed_item_quantity($nid = 0, $quantity = 0, $uid = 0) {
+    // if($uid == 0){
+    //     global $user;
+    //     $uid = $user->uid;
+    // }
+    if($nid != 0 && $uid != 0){       
+		db_update('orders_products')
+            ->fields(array(
+                'quantity' => $quantity,
+            ))
+            ->condition('nid', $nid, '=')
+            ->condition('uid', $uid, '=')            
+            ->condition('order_id', 0, '=') 
+            ->execute();
+	
+    }
 }
