@@ -28,5 +28,7 @@ if(isset($_POST['txn_id'])){
     </div>
     <?php include_once 'footer.php';?>
 <?php }else {
-    drupal_access_denied();
+    $redirect = $GLOBALS['base_url'];
+    drupal_goto("$redirect");  
+    //drupal_access_denied();
 }?>

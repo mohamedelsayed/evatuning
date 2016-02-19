@@ -97,5 +97,7 @@ if (user_is_logged_in()) {?>
     var products_json = '<?php echo $products_json;?>';
     </script>
 <?php }else{
-    drupal_access_denied();
+    $redirect = $GLOBALS['base_url'];
+    drupal_goto("$redirect");  
+    //drupal_access_denied();
 }?>

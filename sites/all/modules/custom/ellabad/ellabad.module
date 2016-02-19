@@ -129,7 +129,7 @@ function ellabad_update_7100() {
  * @return 
  * This is a test function
  */ 
-function ellabad_save_order($item_transaction) {
+function ellabad_save_order($paypal_transaction_id) {
 	if(user_is_logged_in()) {
 		global $user;
 		$uid = $user->uid;
@@ -142,7 +142,7 @@ function ellabad_save_order($item_transaction) {
 		$zip = '';
 		$created = time();
 		$updated = time();
-		$paypal_transaction_id = '';
+		//$paypal_transaction_id = '';
 
 		if(isset($_COOKIE['cart_phone'])) {
 			$phone = $_COOKIE['cart_phone'];
