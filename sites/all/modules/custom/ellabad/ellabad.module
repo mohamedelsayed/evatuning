@@ -14,10 +14,10 @@ function ellabad_init(){
 	//die(pr(json_decode($_COOKIE['cart_products'])));
 }
 function ellabad_menu() {
-	$items['admin/custom/orders/%/%'] = array(
+	$items['admin/custom/orders'] = array(
 		'title' => 'All Orders',
 		'page callback' => 'ellabad_list_orders_with_pager_content',
-		'page arguments' => array(3, 4),
+		'page arguments' => array(),
         'type' => MENU_CALLBACK,
 		'access arguments' => array('access content'),
 		//'weight' => -14,
