@@ -5,7 +5,7 @@
  */
 // module_load_include('inc', 'content', 'includes/password');
 function ellabad_init(){
-	
+	// ellabad_test();
 }
 function elabad_menu() {
 
@@ -13,4 +13,104 @@ function elabad_menu() {
 }
 
 function ellabad_form_alter(&$form, &$form_state, $form_id){
+}
+/**
+ * @param 
+ * @return 
+ * This is a test function
+ */ 
+function ellabad_test() {
+
+	// $_SESSION['id'] = 'my-id';
+	// // die(pr($_SESSION));
+	// global $user;
+	// // die(pr($user));
+	// if(user_is_logged_in()) {
+	// 	die(pr($user));
+	// } else {
+	// 	// die('You are not logged in');
+	// 	die(pr($user));
+	// }
+}
+/*
+* function to create orders table
+*/
+function ellabad_update_7100() {
+    $schema = array(
+        'fields' => array(
+            'id' => array(
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+            ),
+            'uid' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => '0',
+            ),
+            'status' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => '0',
+            ),            
+            'phone' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'address1' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'address2' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'country' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'city' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'zip' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+            'created' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => '0',
+            ),
+            'updated' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'not null' => TRUE,
+                'default' => '0',
+            ),
+            'paypal_transaction_id' => array(
+        		'type' => 'varchar',
+		        'length' => 255,
+		        'not null' => FALSE,
+		        'default' => ''
+            ),
+        ),
+        'primary key' => array('id'),
+    );
+    db_create_table('orders', $schema);
 }
