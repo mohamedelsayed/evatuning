@@ -6,7 +6,12 @@
  */?>
 <?php $base_url_with_lang = elsayed_get_base_url_with_lang();
 $actual_link = elsayed_get_actual_link();
-if (user_is_logged_in()) {?>
+if (user_is_logged_in()) {
+    $cart_summary = elsayed_get_cart_summary();
+    if($cart_summary['price'] == 0){
+        $redirect = $GLOBALS['base_url'];
+        drupal_goto("$redirect");          
+    }?>
     <?php include_once 'header.php';?>
     <div id="products-post">
         <div class="container">
@@ -41,8 +46,7 @@ if (user_is_logged_in()) {?>
                 }
                 require_once DRUPAL_ROOT . '/includes/locale.inc';
                 $options = country_get_list();
-                $country_code = elsayed_ip_info("Visitor");
-                $cart_summary = elsayed_get_cart_summary();
+                $country_code = elsayed_ip_info("Visitor");                
                 $current_currency = elsayed_get_current_currency();
                 $symbol = '';
                 if(isset($current_currency->field_symbol[LANGUAGE_NONE][0]['value'])){
