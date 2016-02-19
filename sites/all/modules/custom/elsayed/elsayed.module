@@ -1245,3 +1245,19 @@ function elsayed_get_cart_json(){
     }
     return json_encode($data);
 }
+function elsayed_is_user_admin($uid = 0){
+    $is_admin = 0;
+    if ($uid == 0) {
+        global $user;
+        $userdata = $user;
+    } else {
+        $userdata = user_load($uid);
+    }   
+    if($user->uid == 1){
+        $is_admin = 1;        
+    }
+    if (in_array('administrator', $user->roles)) {
+        $is_admin = 1;
+    }
+    return $is_admin;
+}
