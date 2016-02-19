@@ -119,7 +119,7 @@ function elsayed_menu() {
         'page arguments' => array(),
         'type' => MENU_CALLBACK,
         'access arguments' => array('access content'),
-    );            
+    );           
     return $items;
 }
 function elsayed_get_default_language(){
@@ -1232,4 +1232,16 @@ function elsayed_ip_info($ip = NULL, $deep_detect = TRUE) {
         }
     }
     return $output;
+}
+function elsayed_get_cart_json(){
+    $records = elsayed_get_cart();
+    $data = array();
+    if(!empty($records)){
+        foreach ($records as $key => $record) {
+            $quantity = $record->quantity;                 
+            $nid = $record->nid;	
+            $data[$nid] = $quantity;
+        }
+    }
+    return json_encode($data);
 }
