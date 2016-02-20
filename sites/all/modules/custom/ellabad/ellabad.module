@@ -345,12 +345,15 @@ function ellabad_list_orders_with_pager_content() {
         $class_all = '';
         $class_active = '';
         $class_pending = '';
+        $class_all = 'active';
         if($status == 'all'){
             $class_all = 'active';
         }elseif($status == 'active'){
+            $class_all = '';
 			$status_val = 1;
             $class_active = 'active';
 		} else if($status == 'pending') {
+		    $class_all = '';
 		    $class_pending = 'active';
 			$status_val = 0;
 		}
