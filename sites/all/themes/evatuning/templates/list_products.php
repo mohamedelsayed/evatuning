@@ -36,7 +36,7 @@
                         <?php echo $field_price;?>
                     </div>
                     <div class="label-text">
-                        <h3><a href="<?php echo $product_url;?>"><?php echo $product_title;?></a></h3>
+                        <h3 style="height: 40px;"><a href="<?php echo $product_url;?>"><?php echo $product_title;?></a></h3>
                         
                     </div>
                 </div>          
