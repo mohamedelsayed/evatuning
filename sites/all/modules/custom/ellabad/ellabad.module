@@ -481,7 +481,7 @@ function ellabad_view_order() {
 			        <th data-field="value">'. $order['info']->address1  .'</th>
 			    </tr>
 			    <tr>
-			        <th data-field="key" >Address</th>
+			        <th data-field="key" >Address2</th>
 			        <th data-field="value">'. $order['info']->address2  .'</th>
 			    </tr>
 			    <tr>
