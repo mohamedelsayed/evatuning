@@ -332,7 +332,7 @@ function ellabad_list_orders_with_pager_content() {
 			array('data' => t('User Name')),		
 			array('data' => t('Status')),
 			array('data' => t('Created')),
-			array('data' => t('Total')),
+			array('data' => t('Total Amount')),
 			array('data' => t('Operations')),
 		);
 		global $base_url;
@@ -438,24 +438,6 @@ function ellabad_view_order() {
 			<li><a href="'.$base_url.'/admin/custom/update_order_status/'.$order_id.'/'.$status_val.'">'.$status_button.'</a></li>
 			</ul>';
 		$output .='<br><b> Order basic info</b>';
-		//$output .= "<br><b> Order basic info</b>";
-        /*$output .= "
-        		<p> <b>Id</b> : ".$order['info']->id." </p>
-        		<p> <b>User name</b> : ".ellabad_get_user_realname($order['info']->uid)." </p>
-        		<p> <b>Status</b> : ".ellabad_get_order_status($order['info']->status)." </p>
-        		<p> <b>Phone</b> : ". $order['info']->phone ." </p>
-        		<p> <b>Address1</b> : ". $order['info']->address1 ." </p>
-        		<p> <b>Address2</b> : ". $order['info']->address2 ." </p>
-        		<p> <b>Country</b> : ". $order['info']->country ." </p>
-        		<p> <b>City</b> : ". $order['info']->city ." </p>
-        		<p> <b>Zip</b> : ". $order['info']->zip ." </p>
-        		<p> <b>Created</b> : ". date('Y-m-d H:i:s', $order['info']->created) ." </p>
-        		<p> <b>Updated</b> : ". date('Y-m-d H:i:s', $order['info']->updated) ." </p>        		
-        		<p> <b>Paypal Transaction ID</b> : ". $order['info']->paypal_transaction_id ." </p>
-        		<p> <b>Total</b> : ". ellabad_order_total($order['info']->id) ." </p>
-        		
-        	";
-        */
         require_once DRUPAL_ROOT . '/includes/locale.inc';
         $options = country_get_list();
         $country_name = '';
@@ -505,7 +487,7 @@ function ellabad_view_order() {
 			        <th data-field="value">'. $order['info']->paypal_transaction_id  .'</th>
 			    <tr>
 			    <tr>
-			        <th data-field="key" >Total</th>
+			        <th data-field="key" >Total Amount</th>
 			        <th data-field="value">'. ellabad_order_total($order['info']->id)  .'</th>
 			    <tr>
 			    </thead>
@@ -513,13 +495,6 @@ function ellabad_view_order() {
 		
 
         $output .= "<br><b><b> Order owner info</b></b>";
-       	/*
-        $output .= "
-        		<p> <b>Id</b> : ".$order['user']->uid." </p>
-        		<p> <b>username</b> : ".$order['user']->name." </p>
-        		<p> <b>mail</b> : ".$order['user']->mail." </p>
-        	";
-        */
    		$output .='<table id="table">
 		    <thead>
 			    <tr>
@@ -549,7 +524,7 @@ function ellabad_view_order() {
 		      <table class="table table-bordered">
 		        <thead>
 		          <tr>
-		            <th># ID</th>
+		            <th>ID</th>
 		            <th>Product Name</th>
 		            <th>Quantity</th>
 		            <th>Price</th>
@@ -558,10 +533,11 @@ function ellabad_view_order() {
 		        <tbody>';		        
 		        if(!empty($order['items'])){
 		        	foreach ($order['items'] as $key => $item) {
-		        
+		        	$product_url = elsayed_get_node_url_by_id($item->nid);
+		        	$product_link= '<a href="'.$product_url.'">'.$item->title.'</a>';
 		       $output .= ' <tr>
 			            <td>'. $item->nid .'</td>
-			            <td>'. $item->title .'</td>
+			            <td>'. $product_link .'</td>
 			            <td>'. $item->quantity .'</td>
 			            <td>'. $item->price .'</td>
 			          </tr>
@@ -569,27 +545,15 @@ function ellabad_view_order() {
 			    	} 
 				}
 			$output .=
-				       '   
+				       ' <tr>
+		            		<td colspan="3">Total Amount</td>
+		            		<td>'. ellabad_order_total($order['info']->id) .'</td>
+			          		</tr>  
 				        </tbody>
 				      </table>
 				    </div>
 					</div>
 				</div>';
-		/*
-        if(!empty($order['items'])){
-        	$output .= "<br><b> Order items</b><br>";
-        	foreach ($order['items'] as $key => $item) {
-        		$output .= "<br><b> Order item ".++$key."</b>";
-        		$output .= "
-	        		<p> <b>Id</b> : ".$item->nid." </p>
-	        		<p> <b>Title</b> : ".$item->title." </p>
-	        		<p> <b>Quantity</b> : ".$item->quantity." </p>
-	        		<p> <b>Price</b> : ".$item->price." </p>
-	        	";
-        		
-        	}
-        }
-		*/
 		return $output;
 	}
 }
@@ -639,7 +603,7 @@ function ellabad_list_user_orders() {
 			array('data' => t('User Name')),		
 			array('data' => t('Status')),
 			array('data' => t('Created')),
-			array('data' => t('Total')),
+			array('data' => t('Total Amount')),
 			array('data' => t('Operations')),
 		);
 		global $base_url;
@@ -794,7 +758,7 @@ function ellabad_view_order_front() {
 				        <th data-field="value">'. $order['info']->paypal_transaction_id  .'</th>
 				    <tr>
 				    <tr>
-				        <th data-field="key" >Total</th>
+				        <th data-field="key" >Total Amount</th>
 				        <th data-field="value">'. ellabad_order_total($order['info']->id)  .'</th>
 				    <tr>
 				    </thead>
@@ -802,13 +766,6 @@ function ellabad_view_order_front() {
 			
 
 	        $output .= "<br><b><b> Order owner info</b></b>";
-	       	/*
-	        $output .= "
-	        		<p> <b>Id</b> : ".$order['user']->uid." </p>
-	        		<p> <b>username</b> : ".$order['user']->name." </p>
-	        		<p> <b>mail</b> : ".$order['user']->mail." </p>
-	        	";
-	        */
 	   		$output .='<table id="table">
 			    <thead>
 				    <tr>
@@ -837,7 +794,7 @@ function ellabad_view_order_front() {
 			      <table class="table table-bordered">
 			        <thead>
 			          <tr>
-			            <th># ID</th>
+			            <th>ID</th>
 			            <th>Product Name</th>
 			            <th>Quantity</th>
 			            <th>Price</th>
@@ -846,10 +803,11 @@ function ellabad_view_order_front() {
 			        <tbody>';		        
 			        if(!empty($order['items'])){
 			        	foreach ($order['items'] as $key => $item) {
-			        
-			       $output .= ' <tr>
+			        	$product_url = elsayed_get_node_url_by_id($item->nid);
+		        		$product_link= '<a href="'.$product_url.'">'.$item->title.'</a>';
+			       	$output .= ' <tr>
 				            <td>'. $item->nid .'</td>
-				            <td>'. $item->title .'</td>
+				            <td>'. $product_link .'</td>
 				            <td>'. $item->quantity .'</td>
 				            <td>'. $item->price .'</td>
 				          </tr>
@@ -857,7 +815,10 @@ function ellabad_view_order_front() {
 				    	} 
 					}
 				$output .=
-					       '   
+					       ' <tr>
+			            		<td colspan="3">Total Amount</td>
+			            		<td>'. ellabad_order_total($order['info']->id) .'</td>
+			          		</tr>  
 					        </tbody>
 					      </table>
 					    </div>
