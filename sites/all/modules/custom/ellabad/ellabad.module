@@ -492,19 +492,19 @@ function ellabad_view_order() {
 			    <tr>
 			        <th data-field="key" >ZIP</th>
 			        <th data-field="value">'. $order['info']->zip  .'</th>
-			    <tr>
+			    </tr>
 			    <tr>
 			        <th data-field="key" >Created</th>
 			        <th data-field="value">'. date('Y-m-d H:i:s', $order['info']->created)  .'</th>
-			    <tr>
+			    </tr>
 			    <tr>
 			        <th data-field="key" >Paypal Transaction ID</th>
 			        <th data-field="value">'. $order['info']->paypal_transaction_id  .'</th>
-			    <tr>
+			    </tr>
 			    <tr>
 			        <th data-field="key" >Total Amount</th>
 			        <th data-field="value">'. ellabad_order_total($order['info']->id)  .'</th>
-			    <tr>
+			    </tr>
 			    </thead>
 			</table>';
 		
@@ -606,80 +606,7 @@ function ellabad_get_order_items_details($order_id) {
 /*
 * Function to list all orders of logged-in user
 */
-function ellabad_list_user_orders() {
-	/*global $user;
-	if(user_is_logged_in() && $user->uid != 0){
-		
-		$uid = $user->uid;
-		$header = array(
-			//array('data' => t('Weight'), 'field' => 'weight', 'sort' => 'asc'),
-			//array('data' => t('id'), 'field' => 'domain_id', 'sort' => 'desc'),
-			array('data' => t('Order ID')),
-			array('data' => t('User Name')),		
-			array('data' => t('Status')),
-			array('data' => t('Created')),
-			array('data' => t('Total Amount')),
-			array('data' => t('Operations')),
-		);
-		global $base_url;
-		$status = arg(1);
-		$status_val = '';
-		// if($status == 'active'){
-		// 	$status_val = 1;
-		// } else if($status == 'pending') {
-		// 	$status_val = 0;
-		// }
-		$class_all = '';
-        $class_active = '';
-        $class_pending = '';
-        $class_all = 'active';
-        if($status == 'all'){
-            $class_all = 'active';
-        }elseif($status == 'active'){
-            $class_all = '';
-			$status_val = 1;
-            $class_active = 'active';
-		} else if($status == 'pending') {
-		    $class_all = '';
-		    $class_pending = 'active';
-			$status_val = 0;
-		}
-		//$uid = arg(4);
-		$query = db_select('orders', 'o');
-		$query->condition('o.uid', $uid, '=');
-
-		//$query->join('users', 'u', 'o.uid= u.uid');
-		$query->fields('o', array('id', 'uid', 'status', 'created' ));
-		if($status == 'active' || $status =='pending' ){
-			$query->condition('o.status', $status_val, '=');
-		}
-		$table_sort = $query->extend('TableSort') // Add table sort extender.
-			->orderByHeader($header); // Add order by headers.
-			$pager = $table_sort->extend('PagerDefault')
-			->limit(20);
-		$result = $pager->execute();
-		$rows = array();
-		$output = '<ul class="action-links">
-			<li><a class="'.$class_all.'" href="'.$base_url.'/my_orders/all">All</a></li>
-			<li><a class="'.$class_active.'" href="'.$base_url.'/my_orders/active">Active</a></li>
-			<li><a class="'.$class_pending.'" href="'.$base_url.'/my_orders/pending">Pending</a></li>
-			</ul>';
-		foreach($result as $res){
-			$rows[] = array($res->id, ellabad_get_user_realname($res->uid) ,ellabad_get_order_status($res->status), date('Y-m-d H:i:s', $res->created), ellabad_order_total($res->id) ,"<a href='$base_url/order_item/$res->id'>View</a>");		
-		}
-		// If rows are not empty theme and display the rows.
-		if (!empty($rows)){
-			$output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'sort-table')));
-			$output .= theme('pager');
-		}else{
-			$output .= t("No results found.");
-		}
-
-		return $output;
-	} else {
-		return "You are not authorized to access this page";
-	}
-	*/
+function ellabad_list_user_orders() {	
 	$output = '';
     return $output;
 }
@@ -731,139 +658,9 @@ function ellabad_order_total($order_id) {
 /*
 * Function to view order on front
 */
-function ellabad_view_order_front() {
-	if(user_is_logged_in()){
-		$order_id = arg(1);
-		global $base_url;
-		global $user;
-		//get order iformation
-		$order = ellabad_get_order_details($order_id);
-
-		if($order['info']->uid == $user->uid) {
-			require_once DRUPAL_ROOT . '/includes/locale.inc';
-	        $options = country_get_list();
-	        $country_name = '';
-	        if(isset($options[$order['info']->country])) {
-	        	$country_name =$options[$order['info']->country];
-	        }
-			$output ='<br><b> Order basic info</b>';
-			
-			$output .='<table id="table">
-				    <thead>			    
-				    <tr>
-				        <th data-field="key" >ID</th>
-				        <th data-field="value">'. $order['info']->id  .'</th>
-				    </tr>				    
-				    <tr>
-				        <th data-field="key" >Status</th>
-				        <th data-field="value">'. ellabad_get_order_status($order['info']->status) .'</th>
-				    </tr>
-				    <tr>
-				        <th data-field="key" >Phone</th>
-				        <th data-field="value">'. $order['info']->phone  .'</th>
-				    </tr>
-				    <tr>
-				        <th data-field="key" >Address</th>
-				        <th data-field="value">'. $order['info']->address1  .'</th>
-				    </tr>
-				    <tr>
-				        <th data-field="key" >Address2</th>
-				        <th data-field="value">'. $order['info']->address2  .'</th>
-				    </tr>
-				    <tr>
-				        <th data-field="key" >Country</th>
-				        <th data-field="value">'. $country_name  .'</th>
-				    </tr>
-				    <tr>
-				        <th data-field="key" >City</th>
-				        <th data-field="value">'. $order['info']->city  .'</th>
-				    </tr>
-				    <tr>
-				        <th data-field="key" >ZIP</th>
-				        <th data-field="value">'. $order['info']->zip  .'</th>
-				    <tr>
-				    <tr>
-				        <th data-field="key" >Created</th>
-				        <th data-field="value">'. date('Y-m-d H:i:s', $order['info']->created)  .'</th>
-				    <tr>
-				    <tr>
-				        <th data-field="key" >Paypal Transaction ID</th>
-				        <th data-field="value">'. $order['info']->paypal_transaction_id  .'</th>
-				    <tr>
-				    <tr>
-				        <th data-field="key" >Total Amount</th>
-				        <th data-field="value">'. ellabad_order_total($order['info']->id)  .'</th>
-				    <tr>
-				    </thead>
-				</table>';
-			
-
-	        $output .= "<br><b><b> Order owner info</b></b>";
-	   		$output .='<table id="table">
-			    <thead>
-				    <tr>
-				        <th data-field="key" >ID</th>
-				        <th data-field="value">'. $order['info']->id  .'</th>
-				    </tr>
-				    <tr>
-				        <th data-field="key" >Full name</th>
-				        <th data-field="value">'. ellabad_get_user_realname($order['info']->uid)  .'</th>
-				    </tr>
-				    <tr>
-				        <th data-field="key" >Username</th>
-				        <th data-field="value">'. $order['user']->name  .'</th>
-				    </tr>
-				      <tr>
-				        <th data-field="key" >Mail</th>
-				        <th data-field="value">'. $order['user']->mail  .'</th>
-				    </tr>		   
-			    </thead>
-			</table>';
-
-	        $output .='<br><b> Order items</b>
-	        <div class="container">
-				<div class="row">
-				<div class="table-responsive">
-			      <table class="table table-bordered">
-			        <thead>
-			          <tr>
-			            <th>ID</th>
-			            <th>Product Name</th>
-			            <th>Quantity</th>
-			            <th>Price</th>
-			          </tr>
-			        </thead>
-			        <tbody>';		        
-			        if(!empty($order['items'])){
-			        	foreach ($order['items'] as $key => $item) {
-			        	$product_url = elsayed_get_node_url_by_id($item->nid);
-		        		$product_link= '<a href="'.$product_url.'">'.$item->title.'</a>';
-			       	$output .= ' <tr>
-				            <td>'. $item->nid .'</td>
-				            <td>'. $product_link .'</td>
-				            <td>'. $item->quantity .'</td>
-				            <td>'. $item->price .'</td>
-				          </tr>
-				        ';
-				    	} 
-					}
-				$output .=
-					       ' <tr>
-			            		<td colspan="3">Total Amount</td>
-			            		<td>'. ellabad_order_total($order['info']->id) .'</td>
-			          		</tr>  
-					        </tbody>
-					      </table>
-					    </div>
-						</div>
-					</div>';
-			
-		return $output;
-		} else {
-			return "You are not authorized to view this page";
-		}
-		
-	}
+function ellabad_view_order_front() {	
+	$output = '';
+	return $output;
 }
 
 function ellabad_get_my_orders($uid = 0 ,$status_val) {
