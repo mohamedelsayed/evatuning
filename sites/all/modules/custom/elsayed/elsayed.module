@@ -120,7 +120,25 @@ function elsayed_menu() {
         'type' => MENU_CALLBACK,
         'access arguments' => array('access content'),
     );           
+    $items['user/edit'] = array(
+        'title'            => 'Edit Profile',
+        'description'      => 'Edit own profile',
+        'page callback'    => 'elsayed_user_edit',
+        'access callback'  => 'elsayed_user_edit_access',
+        'type'             => MENU_LOCAL_TASK,
+        'file'             => 'user.pages.inc',
+        'file path'        => 'modules/user'
+    );
     return $items;
+}
+function elsayed_user_edit() {
+    global $user;
+    $account = user_load($user->uid);
+    return drupal_get_form('user_profile_form', $account);
+}
+function elsayed_user_edit_access(){
+    global $user;
+    return user_edit_access($user);
 }
 function elsayed_get_default_language(){
     $default_language = 'ar';

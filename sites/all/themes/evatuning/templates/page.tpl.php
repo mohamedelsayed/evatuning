@@ -5,9 +5,13 @@
  * @copyright Copyright (c) 2015 Programming by "http://www.mohamedelsayed.net"
  */?>
 <?php include_once 'header.php';?>
-<div class="work-container" style="width: 100%;">
-    <div class="container about-us-container page_container" style="margin-top:100px; width: 20%;margin-left: auto;margin-right: auto;">
-        <?php print render($page_content);?>  
+<div id="page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <?php print render($page_content);?>  
+            </div>
+        </div>
     </div>
 </div>
 <?php include_once 'footer.php';?>
