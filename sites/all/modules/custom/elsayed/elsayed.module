@@ -678,7 +678,7 @@ function elsayed_register_new_user($name, $mail, $pass1, $pass2, $field_first_na
     $redirect = $GLOBALS['base_url'];
     drupal_goto("$redirect");            
 }
-function elsayed_get_products($category = 0, $home = 0, $limit = 0, $page = 1){
+function elsayed_get_products($category = 0, $home = 0, $limit = 0, $page = 1, $category_type = 2){
     $items = array();
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'node')
@@ -692,6 +692,16 @@ function elsayed_get_products($category = 0, $home = 0, $limit = 0, $page = 1){
     if($home != 0){
         $query->fieldCondition('field_show_in_home', 'value', $home, '=');
     }    
+    if($category == 0){
+        $categories = array();
+        if($category_type == 0 || $category_type == 1){
+            $categories_data = ellabad_get_categories_by_type($category_type);
+            $categories = array_keys($categories_data);                    
+        }
+        if(!empty($categories)){
+            $query->fieldCondition('field_category', 'target_id', $categories, 'IN');
+        }
+    }
     $result = $query->execute();
     $total_items_nids = array();
     if (isset($result['node'])) {
