@@ -24,8 +24,7 @@ $actual_link = elsayed_get_actual_link();?>
                             } else {
                                 $field_first_name = $userdata->name;
                             }
-                            $user_url = $GLOBALS['base_url'].'/user';
-                            ?>                            
+                            $user_url = $GLOBALS['base_url'].'/user';?>                            
                             <a><?php echo t('Hello').' '.$field_first_name;?></a>
                             <a href="<?php echo $user_url;?>"><?php echo t('My account');?></a>
                             <a href="<?php echo $GLOBALS['base_url'].'/user/edit';?>"><?php echo t('Edit Profile');?></a>
@@ -76,11 +75,18 @@ $actual_link = elsayed_get_actual_link();?>
                 </div>
                 <div class="col-md-6">
                     <div class="main-menu">
-                        <ul>
+                        <ul class="menu">
                             <li><a href="<?php echo $GLOBALS['base_url'];?>"><?php echo t('Home');?></a></li>
                             <li><a href="#"><?php echo t('About');?></a></li>
                             <li><a href="<?php echo $GLOBALS['base_url'].'/articles';?>"><?php echo t('News');?></a></li>
-                            <li><a href="<?php echo $GLOBALS['base_url'].'/products';?>"><?php echo t('Products');?></a></li>
+                            <li><a href="<?php echo $GLOBALS['base_url'].'/products';?>"><?php echo t('Products');?></a>
+                                <ul style="width: auto;overflow: hidden;">
+                                    <li class="submenu" style="width: 100%;padding: 0 5px;">
+                                        <a style="width: auto;white-space: nowrap; min-width: 200px" href="<?php echo 'dd';?>" >
+                                            <?php echo 'dddd';?></a>
+                                    </li>
+                                </ul>
+                            </li>
                             <li><a href="#"><?php echo t('Branding');?></a></li>
                             <?php if(!empty($contact_us)){?>
                                 <li>
