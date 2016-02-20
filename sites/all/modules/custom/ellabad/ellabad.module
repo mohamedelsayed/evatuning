@@ -463,15 +463,11 @@ function ellabad_view_order() {
 			        <th data-field="value">'. $order['info']->id  .'</th>
 			    </tr>
 			    <tr>
-			        <th data-field="key" >User name</th>
-			        <th data-field="value">'. ellabad_get_user_realname($order['info']->uid)  .'</th>
-			    </tr>
-			    <tr>
 			        <th data-field="key" >Status</th>
 			        <th data-field="value">'. ellabad_get_order_status($order['info']->status) .'</th>
 			    </tr>
 			    <tr>
-			        <th data-field="key" >ID</th>
+			        <th data-field="key" >Phone</th>
 			        <th data-field="value">'. $order['info']->phone  .'</th>
 			    </tr>
 			    <tr>
@@ -527,6 +523,11 @@ function ellabad_view_order() {
 			    <tr>
 			        <th data-field="key" >ID</th>
 			        <th data-field="value">'. $order['info']->id  .'</th>
+			    </tr>
+
+			    <tr>
+			        <th data-field="key" >Full name</th>
+			        <th data-field="value">'. ellabad_get_user_realname($order['info']->uid)  .'</th>
 			    </tr>
 			    <tr>
 			        <th data-field="key" >Username</th>
@@ -757,7 +758,7 @@ function ellabad_view_order_front() {
 				        <th data-field="value">'. ellabad_get_order_status($order['info']->status) .'</th>
 				    </tr>
 				    <tr>
-				        <th data-field="key" >ID</th>
+				        <th data-field="key" >Phone</th>
 				        <th data-field="value">'. $order['info']->phone  .'</th>
 				    </tr>
 				    <tr>
