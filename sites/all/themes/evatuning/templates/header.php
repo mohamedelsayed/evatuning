@@ -94,7 +94,19 @@ $actual_link = elsayed_get_actual_link();?>
                                     </ul>
                                 <?php }?>
                             </li>
-                            <li><a href="#"><?php echo t('Branding');?></a></li>
+                            <li><a href="<?php echo $GLOBALS['base_url'].'/branding';?>"><?php echo t('Branding');?></a>
+                                <?php if(!empty($non_branding_categories)){?>
+                                    <ul style="width: auto;overflow: hidden;">
+                                        <?php foreach ($branding_categories as $key => $value) {?>                                            
+                                            <li class="submenu" style="width: 100%;padding: 0 5px;">
+                                                <a style="width: auto;white-space: nowrap; min-width: 200px" href="<?php echo $GLOBALS['base_url'].'/branding/'.$key;?>" >
+                                                    <?php echo $value;?>
+                                                </a>
+                                            </li>
+                                        <?php }?>
+                                    </ul>
+                                <?php }?>
+                            </li>
                             <?php if(!empty($contact_us)){?>
                                 <li>
                                     <a href="<?php echo elsayed_get_node_url_by_id($contact_us->nid);?>"><?php echo $contact_us->title;?></a>
