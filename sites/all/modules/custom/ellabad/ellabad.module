@@ -451,6 +451,7 @@ function ellabad_view_order() {
         		<p> <b>Created</b> : ". date('Y-m-d H:i:s', $order['info']->created) ." </p>
         		<p> <b>Updated</b> : ". date('Y-m-d H:i:s', $order['info']->updated) ." </p>        		
         		<p> <b>Paypal Transaction ID</b> : ". $order['info']->paypal_transaction_id ." </p>
+        		<p> <b>Total</b> : ". ellabad_order_total($order['info']->id) ." </p>
         		
         	";
 
