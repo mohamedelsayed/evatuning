@@ -5,7 +5,7 @@
  * @copyright Copyright (c) 2015 Programming by "http://www.mohamedelsayed.net"
  */?>
 <?php include_once 'header.php';?>
-<div id="products-post">
+<div id="page">
     <div class="container">
         <div class="row">
             <div class="col-md-12">

@@ -121,4 +121,12 @@ $actual_link = elsayed_get_actual_link();?>
     </div>
     <div class="mesage-pop-bg"></div>
 </div>
-<?php print '<div class="messagesdiv" style="">'.$messages.'</div>'; ?>
+<div id="messagestop">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <?php print '<div class="messagesdiv" style="">'.$messages.'</div>'; ?>
+            </div>
+        </div>
+    </div>
+</div>
