@@ -388,7 +388,7 @@ function ellabad_list_orders_with_pager_content() {
 			$output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'sort-table')));
 			$output .= theme('pager');
 		}else{
-			$output .= t("No results found.");
+			$output .= '<div style="width:100%;text-align:center;float:left">'.t("No results found.").'</div>';
 		}
 
 		return $output;
