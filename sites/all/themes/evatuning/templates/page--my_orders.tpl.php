@@ -18,7 +18,6 @@ $actual_link = elsayed_get_actual_link();?>
             </div>
         </div>
         your code here
-
     </div>
 </div>
 <?php include_once 'footer.php';?>
