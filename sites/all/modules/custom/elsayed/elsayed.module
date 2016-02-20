@@ -1066,6 +1066,7 @@ function elsayed_get_cart_summary(){
             $field_value_versus_default = 1;
         }
     }
+    $data['default_price'] = $price;
     $price = $price * $field_value_versus_default;    
     $price_with_symbol = '';
     if(isset($current_currency->field_symbol[LANGUAGE_NONE][0]['value'])){
@@ -1260,4 +1261,28 @@ function elsayed_is_user_admin($uid = 0){
         $is_admin = 1;
     }
     return $is_admin;
+}
+function elsayed_get_last_order_info($uid = 0){
+    $data = array();
+    $data['phone'] = '';
+    $data['address1'] = '';
+    $data['address2'] = '';
+    $data['country'] = '';
+    $data['zip'] = '';
+    $data['city'] = '';
+    if ($uid == 0) {
+        global $user;
+        $uid = $user->uid;
+    }	
+    $record = db_query('SELECT * FROM {orders} WHERE (uid = :uid)', 
+                                array(':uid' => $uid))->fetchObject();
+    if(!empty($record)){
+        $data['phone'] = $record->phone;
+        $data['address1'] = $record->address1;
+        $data['address2'] = $record->address2;
+        $data['country'] = $record->country;
+        $data['zip'] = $record->zip;
+        $data['city'] = $record->city;        
+    }
+    return $data;
 }
