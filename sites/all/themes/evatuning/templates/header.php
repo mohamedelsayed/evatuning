@@ -28,6 +28,8 @@ $actual_link = elsayed_get_actual_link();?>
                             ?>                            
                             <a><?php echo t('Hello').' '.$field_first_name;?></a>
                             <a href="<?php echo $user_url;?>"><?php echo t('My account');?></a>
+                            <a href="<?php echo $GLOBALS['base_url'].'/user/edit';?>"><?php echo t('Edit Profile');?></a>
+                            <a href="<?php echo $GLOBALS['base_url'].'/my_orders';?>"><?php echo t('My Orders');?></a>
                             <a href="<?php echo $GLOBALS['base_url'].'/user/logout';?>"><?php echo t('Logout');?></a>
                         <?php }?>
                     </div>
