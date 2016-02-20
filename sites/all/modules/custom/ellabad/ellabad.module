@@ -14,6 +14,7 @@ function ellabad_init(){
 	//die(pr(json_decode($_COOKIE['cart_products'])));
 	//ellabad_get_order_details(37);
 	//ellabad_order_total(37);
+	//ellabad_get_my_orders(1);
 }
 function ellabad_menu() {
 	$items['admin/custom/orders'] = array(
@@ -606,7 +607,7 @@ function ellabad_get_order_items_details($order_id) {
 * Function to list all orders of logged-in user
 */
 function ellabad_list_user_orders() {
-	global $user;
+	/*global $user;
 	if(user_is_logged_in() && $user->uid != 0){
 		
 		$uid = $user->uid;
@@ -678,6 +679,9 @@ function ellabad_list_user_orders() {
 	} else {
 		return "You are not authorized to access this page";
 	}
+	*/
+	$output = '';
+    return $output;
 }
 
 /*
@@ -860,4 +864,20 @@ function ellabad_view_order_front() {
 		}
 		
 	}
+}
+
+function ellabad_get_my_orders($uid = 0 ,$status_val) {
+	if($uid == 0) {
+		global $user;
+		$uid = $user->uid;
+	}
+	$query = db_select('orders', 'o');
+    $query->condition('o.uid', $uid, '=');
+
+    $query->fields('o', array('id', 'uid', 'status', 'created' ));
+    if($status_val == 1 || $status_val == 0 ){
+        $query->condition('o.status', $status_val, '=');
+    }
+    $my_orders = $query->execute()->fetchAll();
+    return $my_orders;
 }
