@@ -13,7 +13,7 @@ function ellabad_init(){
 	//(pr($_COOKIE));
 	//die(pr(json_decode($_COOKIE['cart_products'])));
 	//ellabad_get_order_details(37);
-	ellabad_order_total(37);
+	//ellabad_order_total(37);
 }
 function ellabad_menu() {
 	$items['admin/custom/orders'] = array(
