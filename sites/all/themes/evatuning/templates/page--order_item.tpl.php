@@ -24,7 +24,6 @@ $actual_link = elsayed_get_actual_link();?>
             global $user;
             //get order iformation
             $order = ellabad_get_order_details($order_id);
-
             if($order['info']->uid == $user->uid) {
                 require_once DRUPAL_ROOT . '/includes/locale.inc';
                 $options = country_get_list();
@@ -131,10 +130,8 @@ $actual_link = elsayed_get_actual_link();?>
             <?php
             } else {
                 return "You are not authorized to view this page";
-            }
-            
-        }
-        ?>
+            }            
+        }?>
     </div>
 </div>
 <?php include_once 'footer.php';?>
