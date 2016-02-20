@@ -8,7 +8,8 @@
 $actual_link = elsayed_get_actual_link();
 if (user_is_logged_in()) {
     $cart_summary = elsayed_get_cart_summary();
-    if($cart_summary['price'] == 0){
+    $last_order_info = elsayed_get_last_order_info();
+    if($cart_summary['default_price'] == 0){
         $redirect = $GLOBALS['base_url'];
         drupal_goto("$redirect");          
     }?>
@@ -58,7 +59,7 @@ if (user_is_logged_in()) {
                     <input type="hidden" name="item_number" value="1">*//*?>
                     <input type="hidden" name="paypal_url" value="<?php echo $paypal_url;?>">*/?>                
                     <?php /*<input type="hidden" name="business" value="<?php echo $paypal_id;?>">                                
-                    <input type="hidden" name="amount" value="<?php echo $cart_summary['price'];?>">
+                    <input type="hidden" name="amount" value="<?php echo $cart_summary['default_price'];?>">
                     <input type="hidden" name="currency_code" value="<?php echo $symbol;?>">*/?>
                     <input type="hidden" name="cmd" value="_xclick">
                     <input type="hidden" name="item_name" value="<?php echo variable_get('site_name').' Products';?>">
@@ -69,23 +70,27 @@ if (user_is_logged_in()) {
                     <input type="hidden" name="handling" value="0">
                     <input type="hidden" name="cancel_return" value="<?php echo $GLOBALS['base_url'].'/cancel_payment';?>">
                     <input type="hidden" name="return" value="<?php echo $GLOBALS['base_url'].'/success_payment';?>">
-                    <input type="text" placeholder="Phone" name="phone" value="" class="required_input"> 
-                    <input type="text" placeholder="Address" name="address1" value="" class="required_input">
-                    <input type="text" placeholder="Address 2" name="address2" value="">
+                    <input type="text" placeholder="Phone" name="phone" value="<?php echo $last_order_info['phone'];?>" class="required_input"> 
+                    <input type="text" placeholder="Address" name="address1" value="<?php echo $last_order_info['address1'];?>" class="required_input">
+                    <input type="text" placeholder="Address 2" name="address2" value="<?php echo $last_order_info['address2'];?>">
                     <input type='hidden' name='rm' value='2'>
                     <div class="select_country">
                         <select name="country">
                             <?php foreach ($options as $key => $option) {
                                 $checked = '';
-                                if($key == $country_code){
+                                if(trim($last_order_info['address2']) != ''){
+                                    if($key == $last_order_info['address2']){
+                                        $checked = ' selected="selected" ';                            
+                                    }
+                                }elseif($key == $country_code){
                                     $checked = ' selected="selected" ';                            
                                 }?>
                                 <option <?php echo $checked;?> value="<?php echo $key;?>"><?php echo $option;?></option>                        
                             <?php }?>                    
                         </seleZct>
                     </div>
-                    <input type="text" placeholder="Zip Code" name="zip" value="" class="required_input">
-                    <input type="text" placeholder="City" name="city" value="" class="required_input">                
+                    <input type="text" placeholder="Zip Code" name="zip" value="<?php echo $last_order_info['zip'];?>" class="required_input">
+                    <input type="text" placeholder="City" name="city" value="<?php echo $last_order_info['city'];?>" class="required_input">                
                     <div class="submit_paypal">
                         <img onclick="jQuery('#paypal_form').submit();" src="https://www.paypalobjects.com/en_US/i/btn/x-click-but6.gif" align="Paypal" title="Paypal" />
                     </div>
@@ -96,7 +101,7 @@ if (user_is_logged_in()) {
     <?php include_once 'footer.php';?>
     <script type="text/javascript">
     var paypal_id = "<?php echo $paypal_id;?>";    
-    var amount = "<?php echo $cart_summary['price'];?>";
+    var amount = "<?php echo $cart_summary['default_price'];?>";
     var currency_code = "<?php echo $symbol;?>";
     var products_json = '<?php echo $products_json;?>';
     </script>
