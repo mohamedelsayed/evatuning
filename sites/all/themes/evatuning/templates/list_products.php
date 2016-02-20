@@ -45,4 +45,6 @@
     </div>
     <?php $paging = elsayed_draw_paging($page_count, $page);
     echo $paging;?>  
-<?php }?> 
+<?php }else{ ?>
+    <div style="width:100%;text-align:center;float:left">No results found</div>
+<?php }?>
