@@ -681,6 +681,7 @@ function ellabad_get_my_orders($uid = 0 ,$status_val) {
 }
 function ellabad_get_categories_by_type($category_type = 1){
 	$categories = array();
+    $data = array();
 	if(!isset($GLOBALS['categories']) || empty($GLOBALS['categories'])){
 		$query = new EntityFieldQuery();
 	    $query->entityCondition('entity_type', 'node')
@@ -691,7 +692,6 @@ function ellabad_get_categories_by_type($category_type = 1){
 	    $query->addMetaData('account', user_load(1));    
 	    $result = $query->execute();
 	    $brands_categories_data = array();
-
 	    $brands_nids = array();
 	    if (isset($result['node'])) {
 	        $brands_nids = array_keys($result['node']);
@@ -714,16 +714,17 @@ function ellabad_get_categories_by_type($category_type = 1){
 	    		$other_categories [$category->nid] = $category->title;
 	    	}
 	    }
-	    $categories = $brands_categories;
+        $data['brands_categories'] = $brands_categories;
 	    if($category_type == 0) {
-	    	$categories = $other_categories;
+            $data['other_categories'] = $other_categories;
 	    }
-	    $GLOBALS['categories'] = $categories;
-
+	    $GLOBALS['categories'] = $data;
 	} else {
-		$categories = $GLOBALS['categories'];
+		$data = $GLOBALS['categories'];
 	}
-
+	$categories = $data['brands_categories'];
+    if($category_type == 0) {
+        $categories = $data['other_categories'];
+    }
 	return $categories;
 }
-

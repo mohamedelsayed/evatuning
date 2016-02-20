@@ -73,6 +73,8 @@ $actual_link = elsayed_get_actual_link();?>
                         </a>
                     </div>
                 </div>
+                <?php $non_branding_categories = ellabad_get_categories_by_type(0);
+                $branding_categories = ellabad_get_categories_by_type(1);?>
                 <div class="col-md-6">
                     <div class="main-menu">
                         <ul class="menu">
@@ -80,12 +82,17 @@ $actual_link = elsayed_get_actual_link();?>
                             <li><a href="#"><?php echo t('About');?></a></li>
                             <li><a href="<?php echo $GLOBALS['base_url'].'/articles';?>"><?php echo t('News');?></a></li>
                             <li><a href="<?php echo $GLOBALS['base_url'].'/products';?>"><?php echo t('Products');?></a>
-                                <ul style="width: auto;overflow: hidden;">
-                                    <li class="submenu" style="width: 100%;padding: 0 5px;">
-                                        <a style="width: auto;white-space: nowrap; min-width: 200px" href="<?php echo 'dd';?>" >
-                                            <?php echo 'dddd';?></a>
-                                    </li>
-                                </ul>
+                                <?php if(!empty($non_branding_categories)){?>
+                                    <ul style="width: auto;overflow: hidden;">
+                                        <?php foreach ($non_branding_categories as $key => $value) {?>                                            
+                                            <li class="submenu" style="width: 100%;padding: 0 5px;">
+                                                <a style="width: auto;white-space: nowrap; min-width: 200px" href="<?php echo $GLOBALS['base_url'].'/products/'.$key;?>" >
+                                                    <?php echo $value;?>
+                                                </a>
+                                            </li>
+                                        <?php }?>
+                                    </ul>
+                                <?php }?>
                             </li>
                             <li><a href="#"><?php echo t('Branding');?></a></li>
                             <?php if(!empty($contact_us)){?>
