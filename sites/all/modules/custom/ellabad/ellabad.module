@@ -59,6 +59,13 @@ function ellabad_menu() {
 		'access arguments' => array('access content'),
 		//'weight' => -14,
 	);
+	$items['branding'] = array(
+        'title' => 'Branding',
+        'page callback' => 'ellabad_get_branding',
+        'page arguments' => array(),
+        'type' => MENU_CALLBACK,
+        'access arguments' => array('access content'),
+    );
     return $items;
 }
 
@@ -726,4 +733,12 @@ function ellabad_get_categories_by_type($category_type = 1){
         $categories = $data['other_categories'];
     }
 	return $categories;
+}
+
+/*
+* Function to list all branding
+*/
+function ellabad_get_branding() {	
+	$output = '';
+    return $output;
 }
