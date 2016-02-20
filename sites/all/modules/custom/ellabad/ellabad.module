@@ -715,9 +715,7 @@ function ellabad_get_categories_by_type($category_type = 1){
 	    	}
 	    }
         $data['brands_categories'] = $brands_categories;
-	    if($category_type == 0) {
-            $data['other_categories'] = $other_categories;
-	    }
+        $data['other_categories'] = $other_categories;
 	    $GLOBALS['categories'] = $data;
 	} else {
 		$data = $GLOBALS['categories'];
