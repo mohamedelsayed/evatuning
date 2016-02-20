@@ -49,10 +49,10 @@ if (user_is_logged_in()) {
                 $options = country_get_list();
                 $country_code = elsayed_ip_info("Visitor");                
                 $current_currency = elsayed_get_current_currency();
-                $symbol = '';
+                /*$symbol = '';
                 if(isset($current_currency->field_symbol[LANGUAGE_NONE][0]['value'])){
                     $symbol = $current_currency->field_symbol[LANGUAGE_NONE][0]['value'];
-                }
+                }*/
                 $products_json = elsayed_get_cart_json();?>
                 <form onsubmit="return validate_custom_checkout_form()" id="paypal_form" action="<?php echo $paypal_url;?>" method="post">
                     <?php /*<input type="hidden" name="no_shipping" value="1">
@@ -78,8 +78,8 @@ if (user_is_logged_in()) {
                         <select name="country">
                             <?php foreach ($options as $key => $option) {
                                 $checked = '';
-                                if(trim($last_order_info['address2']) != ''){
-                                    if($key == $last_order_info['address2']){
+                                if(trim($last_order_info['country']) != ''){
+                                    if($key == $last_order_info['country']){
                                         $checked = ' selected="selected" ';                            
                                     }
                                 }elseif($key == $country_code){
