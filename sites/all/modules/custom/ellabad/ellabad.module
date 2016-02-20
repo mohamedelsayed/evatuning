@@ -324,6 +324,10 @@ function ellabad_make_order($order_info) {
 * Function to list all orders with page content for admin
 */
 function ellabad_list_orders_with_pager_content() {
+    drupal_add_css('ul.action-links a.active{
+        background-color: #0074BD;
+        color:#ffffff;       
+    }', 'inline');
 	if(elsayed_is_user_admin()){
 		$header = array(
 			//array('data' => t('Weight'), 'field' => 'weight', 'sort' => 'asc'),
@@ -338,9 +342,16 @@ function ellabad_list_orders_with_pager_content() {
 		global $base_url;
 		$status = arg(3);
 		$status_val = '';
-		if($status == 'active'){
+        $class_all = '';
+        $class_active = '';
+        $class_pending = '';
+        if($status == 'all'){
+            $class_all = 'active';
+        }elseif($status == 'active'){
 			$status_val = 1;
+            $class_active = 'active';
 		} else if($status == 'pending') {
+		    $class_pending = 'active';
 			$status_val = 0;
 		}
 		$uid = arg(4);
@@ -349,7 +360,7 @@ function ellabad_list_orders_with_pager_content() {
 
 		//$query->join('users', 'u', 'o.uid= u.uid');
 		$query->fields('o', array('id', 'uid', 'status', 'created'));
-		if($status == 'active' || $status =='pending' ){
+		if($status == 'active' || $status == 'pending' ){
 			$query->condition('o.status', $status_val, '=');
 		}
 		if($uid != ''){
@@ -362,9 +373,9 @@ function ellabad_list_orders_with_pager_content() {
 		$result = $pager->execute();
 		$rows = array();
 		$output = '<ul class="action-links">
-			<li><a href="'.$base_url.'/admin/custom/orders/all">All</a></li>
-			<li><a href="'.$base_url.'/admin/custom/orders/active">Active</a></li>
-			<li><a href="'.$base_url.'/admin/custom/orders/pending">Pending</a></li>
+			<li><a class="'.$class_all.'" href="'.$base_url.'/admin/custom/orders/all">All</a></li>
+			<li><a class="'.$class_active.'" href="'.$base_url.'/admin/custom/orders/active">Active</a></li>
+			<li><a class="'.$class_pending.'" href="'.$base_url.'/admin/custom/orders/pending">Pending</a></li>
 			</ul>';
 		foreach($result as $res){
 			$rows[] = array($res->id, ellabad_get_user_realname($res->uid) ,ellabad_get_order_status($res->status), date('Y-m-d H:i:s', $res->created), ellabad_order_total($res->id) , "<a href='$base_url/admin/custom/order/$res->id'>View</a>");		
