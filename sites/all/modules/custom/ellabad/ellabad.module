@@ -13,6 +13,7 @@ function ellabad_init(){
 	//(pr($_COOKIE));
 	//die(pr(json_decode($_COOKIE['cart_products'])));
 	//ellabad_get_order_details(37);
+	ellabad_order_total(37);
 }
 function ellabad_menu() {
 	$items['admin/custom/orders'] = array(
@@ -330,6 +331,8 @@ function ellabad_list_orders_with_pager_content() {
 			array('data' => t('Order ID')),
 			array('data' => t('User Name')),		
 			array('data' => t('Status')),
+			array('data' => t('Created')),
+			array('data' => t('Total')),
 			array('data' => t('Operations')),
 		);
 		global $base_url;
@@ -345,7 +348,7 @@ function ellabad_list_orders_with_pager_content() {
 		$query->condition('o.uid', 0, '!=');
 
 		//$query->join('users', 'u', 'o.uid= u.uid');
-		$query->fields('o', array('id', 'uid', 'status' ));
+		$query->fields('o', array('id', 'uid', 'status', 'created'));
 		if($status == 'active' || $status =='pending' ){
 			$query->condition('o.status', $status_val, '=');
 		}
@@ -364,7 +367,7 @@ function ellabad_list_orders_with_pager_content() {
 			<li><a href="'.$base_url.'/admin/custom/orders/pending">Pending</a></li>
 			</ul>';
 		foreach($result as $res){
-			$rows[] = array($res->id, ellabad_get_user_realname($res->uid) ,ellabad_get_order_status($res->status), "<a href='$base_url/admin/custom/order/$res->id'>View</a>");		
+			$rows[] = array($res->id, ellabad_get_user_realname($res->uid) ,ellabad_get_order_status($res->status), date('Y-m-d H:i:s', $res->created), ellabad_order_total($res->id) , "<a href='$base_url/admin/custom/order/$res->id'>View</a>");		
 		}
 		// If rows are not empty theme and display the rows.
 		if (!empty($rows)){
@@ -403,6 +406,7 @@ function ellabad_get_user_realname($uid) {
 	$realname = '';
 	if($uid != 0){
 		$user_data = user_load($uid);
+		$realname = $user_data->name;
 		if(isset($user_data->realname)) {
 			$realname = $user_data->realname;
 		}
@@ -433,27 +437,32 @@ function ellabad_view_order() {
 			<li><a href="'.$base_url.'/admin/custom/orders">List all orders</a></li>
 			<li><a href="'.$base_url.'/admin/custom/update_order_status/'.$order_id.'/'.$status_val.'">'.$status_button.'</a></li>
 			</ul>';
-
 		$output .= "<br><b> Order basic info</b>";
         $output .= "
         		<p> <b>Id</b> : ".$order['info']->id." </p>
-        		<p> <b>user</b> : ".ellabad_get_user_realname($order['info']->uid)." </p>
-        		<p> <b>status</b> : ".ellabad_get_order_status($order['info']->status)." </p>
-        		<p> <b>phone</b> : ".$order['info']->phone." </p>
-        		<p> <b>Address1</b> : ".$order['info']->address1." </p>
-        		<p> <b>address2</b> : ".$order['info']->address2." </p>
+        		<p> <b>User name</b> : ".ellabad_get_user_realname($order['info']->uid)." </p>
+        		<p> <b>Status</b> : ".ellabad_get_order_status($order['info']->status)." </p>
+        		<p> <b>Phone</b> : ". $order['info']->phone ." </p>
+        		<p> <b>Address1</b> : ". $order['info']->address1 ." </p>
+        		<p> <b>Address2</b> : ". $order['info']->address2 ." </p>
+        		<p> <b>Country</b> : ". $order['info']->country ." </p>
+        		<p> <b>City</b> : ". $order['info']->city ." </p>
+        		<p> <b>Zip</b> : ". $order['info']->zip ." </p>
+        		<p> <b>Created</b> : ". date('Y-m-d H:i:s', $order['info']->created) ." </p>
+        		<p> <b>Updated</b> : ". date('Y-m-d H:i:s', $order['info']->updated) ." </p>        		
+        		<p> <b>Paypal Transaction ID</b> : ". $order['info']->paypal_transaction_id ." </p>
+        		
         	";
 
-        $output .= "<br><b> Order owner info</b>";
+        $output .= "<br><b> Order owner info</b><br>";
         $output .= "
         		<p> <b>Id</b> : ".$order['user']->uid." </p>
         		<p> <b>username</b> : ".$order['user']->name." </p>
         		<p> <b>mail</b> : ".$order['user']->mail." </p>
         	";
 
-        // die(pr($order['items']));
         if(!empty($order['items'])){
-        	$output .= "<br><b> Order items</b>";
+        	$output .= "<br><b> Order items</b><br>";
         	foreach ($order['items'] as $key => $item) {
         		$output .= "<br><b> Order item ".++$key."</b>";
         		$output .= "
@@ -461,7 +470,6 @@ function ellabad_view_order() {
 	        		<p> <b>Title</b> : ".$item->title." </p>
 	        		<p> <b>Quantity</b> : ".$item->quantity." </p>
 	        		<p> <b>Price</b> : ".$item->price." </p>
-
 	        	";
         		
         	}
@@ -515,6 +523,8 @@ function ellabad_list_user_orders() {
 			array('data' => t('Order ID')),
 			array('data' => t('User Name')),		
 			array('data' => t('Status')),
+			array('data' => t('Created')),
+			array('data' => t('Total')),
 			array('data' => t('Operations')),
 		);
 		global $base_url;
@@ -530,7 +540,7 @@ function ellabad_list_user_orders() {
 		$query->condition('o.uid', $uid, '=');
 
 		//$query->join('users', 'u', 'o.uid= u.uid');
-		$query->fields('o', array('id', 'uid', 'status' ));
+		$query->fields('o', array('id', 'uid', 'status', 'created' ));
 		if($status == 'active' || $status =='pending' ){
 			$query->condition('o.status', $status_val, '=');
 		}
@@ -546,7 +556,7 @@ function ellabad_list_user_orders() {
 			<li><a href="'.$base_url.'/my_orders/pending">Pending</a></li>
 			</ul>';
 		foreach($result as $res){
-			$rows[] = array($res->id, ellabad_get_user_realname($res->uid) ,ellabad_get_order_status($res->status), "<a href='$base_url/order_item/$res->id'>View</a>");		
+			$rows[] = array($res->id, ellabad_get_user_realname($res->uid) ,ellabad_get_order_status($res->status), date('Y-m-d H:i:s', $res->created), ellabad_order_total($res->id) ,"<a href='$base_url/order_item/$res->id'>View</a>");		
 		}
 		// If rows are not empty theme and display the rows.
 		if (!empty($rows)){
@@ -580,4 +590,28 @@ function update_order_status() {
 		global $base_url;
 		drupal_goto("$base_url/admin/custom/order/$order_id");
 	}	
+}
+/*
+* Function to get order totals
+*/
+function ellabad_order_total($order_id) {
+	$total = 0;
+	$order_symbol = '';
+	$order_total = '';
+
+	if($order_id != 0) {
+		$ordered_items_data =  db_query('SELECT op.quantity, op.price  FROM {orders_products} op WHERE (op.order_id = :order_id)', 
+        array(':order_id' => $order_id))->fetchALL();
+        if(!empty($ordered_items_data)) {
+        	foreach ($ordered_items_data as $key => $item) {
+        		$total += $item->quantity * $item->price;
+        	}
+        }
+        $default_currency = elsayed_get_default_currency();
+		if(isset($default_currency->field_symbol[LANGUAGE_NONE][0]['value'])){
+        	$order_symbol = $default_currency->field_symbol[LANGUAGE_NONE][0]['value'];
+        }
+        $order_total = $total.' '.$order_symbol;
+    }
+    return $order_total;
 }
