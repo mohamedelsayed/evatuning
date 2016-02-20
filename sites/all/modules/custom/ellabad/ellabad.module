@@ -456,6 +456,12 @@ function ellabad_view_order() {
         		
         	";
         */
+        require_once DRUPAL_ROOT . '/includes/locale.inc';
+        $options = country_get_list();
+        $country_name = '';
+        if(isset($options[$order['info']->country])) {
+        	$country_name =$options[$order['info']->country];
+        }
 		$output .='<table id="table">
 			    <thead>			    
 			    <tr>
@@ -471,16 +477,16 @@ function ellabad_view_order() {
 			        <th data-field="value">'. $order['info']->phone  .'</th>
 			    </tr>
 			    <tr>
-			        <th data-field="key" >Address1</th>
+			        <th data-field="key" >Address</th>
 			        <th data-field="value">'. $order['info']->address1  .'</th>
 			    </tr>
 			    <tr>
-			        <th data-field="key" >Address2</th>
+			        <th data-field="key" >Address</th>
 			        <th data-field="value">'. $order['info']->address2  .'</th>
 			    </tr>
 			    <tr>
 			        <th data-field="key" >Country</th>
-			        <th data-field="value">'. $order['info']->country  .'</th>
+			        <th data-field="value">'. $country_name  .'</th>
 			    </tr>
 			    <tr>
 			        <th data-field="key" >City</th>
@@ -493,10 +499,6 @@ function ellabad_view_order() {
 			    <tr>
 			        <th data-field="key" >Created</th>
 			        <th data-field="value">'. date('Y-m-d H:i:s', $order['info']->created)  .'</th>
-			    <tr>
-			    <tr>
-			        <th data-field="key" >Updated</th>
-			        <th data-field="value">'. date('Y-m-d H:i:s', $order['info']->updated)  .'</th>
 			    <tr>
 			    <tr>
 			        <th data-field="key" >Paypal Transaction ID</th>
@@ -741,18 +743,20 @@ function ellabad_view_order_front() {
 		$order = ellabad_get_order_details($order_id);
 
 		if($order['info']->uid == $user->uid) {
-			$output .='<br><b> Order basic info</b>';
+			require_once DRUPAL_ROOT . '/includes/locale.inc';
+	        $options = country_get_list();
+	        $country_name = '';
+	        if(isset($options[$order['info']->country])) {
+	        	$country_name =$options[$order['info']->country];
+	        }
+			$output ='<br><b> Order basic info</b>';
 			
 			$output .='<table id="table">
 				    <thead>			    
 				    <tr>
 				        <th data-field="key" >ID</th>
 				        <th data-field="value">'. $order['info']->id  .'</th>
-				    </tr>
-				    <tr>
-				        <th data-field="key" >User name</th>
-				        <th data-field="value">'. ellabad_get_user_realname($order['info']->uid)  .'</th>
-				    </tr>
+				    </tr>				    
 				    <tr>
 				        <th data-field="key" >Status</th>
 				        <th data-field="value">'. ellabad_get_order_status($order['info']->status) .'</th>
@@ -762,7 +766,7 @@ function ellabad_view_order_front() {
 				        <th data-field="value">'. $order['info']->phone  .'</th>
 				    </tr>
 				    <tr>
-				        <th data-field="key" >Address1</th>
+				        <th data-field="key" >Address</th>
 				        <th data-field="value">'. $order['info']->address1  .'</th>
 				    </tr>
 				    <tr>
@@ -771,7 +775,7 @@ function ellabad_view_order_front() {
 				    </tr>
 				    <tr>
 				        <th data-field="key" >Country</th>
-				        <th data-field="value">'. $order['info']->country  .'</th>
+				        <th data-field="value">'. $country_name  .'</th>
 				    </tr>
 				    <tr>
 				        <th data-field="key" >City</th>
@@ -784,10 +788,6 @@ function ellabad_view_order_front() {
 				    <tr>
 				        <th data-field="key" >Created</th>
 				        <th data-field="value">'. date('Y-m-d H:i:s', $order['info']->created)  .'</th>
-				    <tr>
-				    <tr>
-				        <th data-field="key" >Updated</th>
-				        <th data-field="value">'. date('Y-m-d H:i:s', $order['info']->updated)  .'</th>
 				    <tr>
 				    <tr>
 				        <th data-field="key" >Paypal Transaction ID</th>
@@ -814,6 +814,10 @@ function ellabad_view_order_front() {
 				    <tr>
 				        <th data-field="key" >ID</th>
 				        <th data-field="value">'. $order['info']->id  .'</th>
+				    </tr>
+				    <tr>
+				        <th data-field="key" >Full name</th>
+				        <th data-field="value">'. ellabad_get_user_realname($order['info']->uid)  .'</th>
 				    </tr>
 				    <tr>
 				        <th data-field="key" >Username</th>
