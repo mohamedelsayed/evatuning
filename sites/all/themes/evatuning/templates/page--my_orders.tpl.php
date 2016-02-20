@@ -19,8 +19,7 @@ $actual_link = elsayed_get_actual_link();?>
         </div>
         <?php
         global $user;
-        if(user_is_logged_in() && $user->uid != 0){
-            
+        if(user_is_logged_in() && $user->uid != 0){            
             $uid = $user->uid;
             global $base_url;
             $status = arg(1);
@@ -46,16 +45,17 @@ $actual_link = elsayed_get_actual_link();?>
                 <li><a class="<?php echo $class_all ?>" href="<?php echo $base_url ?>/my_orders/all">All</a></li>
                 <li><a class="<?php echo $class_active ?>" href="<?php echo $base_url ?>/my_orders/active">Active</a></li>
                 <li><a class="<?php echo $class_pending ?>" href="<?php echo $base_url ?>/my_orders/pending">Pending</a></li>
-            </ul>
-            
+            </ul>            
             <div class="container">
                 <div class="row">
-                    <div class="table-responsive">
-                  <table class="table table-bordered">
+                    <div class="table-responsive">                  
+                    <?php 
+                    if(!empty($my_orders)) {?>
+                        <table class="table table-bordered">
                     <thead>
                       <tr>
                         <th>ID</th>
-                        <th>User Name</th>
+                        <?php /*<th>User Name</th>*/?>
                         <th>Status</th>
                         <th>Created</th>
                         <th>Total Amount</th>
@@ -63,25 +63,23 @@ $actual_link = elsayed_get_actual_link();?>
                       </tr>
                     </thead>
                     <tbody>
-                    <?php 
-                    if(!empty($my_orders)) {
-                        foreach ($my_orders as $key => $order) {                       
-                    ?>
+                        <?php foreach ($my_orders as $key => $order) {?>
                             <tr>
                                 <td><?php echo $order->id  ?></td>                        
-                                <td><?php echo ellabad_get_user_realname($order->uid)   ?></td>                        
+                                <?php /*<td><?php echo ellabad_get_user_realname($order->uid) ?></td>*/?>                        
                                 <td><?php echo ellabad_get_order_status($order->status)   ?></td>                        
                                 <td><?php echo date('Y-m-d H:i:s', $order->created)   ?></td>                        
                                 <td><?php echo ellabad_order_total($order->id)  ?></td>                                 
                                 <td><span class="label label-info"><a href="<?php echo $base_url.'/order_item/'.$order->id ?>">View</a></span></td>
                             </tr>
                     <?php 
-                        }
-                    }
-                    ?>
-
-                    </tbody>
+                        }?>
+                        </tbody>
                   </table>
+                    <?php }else{?>
+                        <div style="width:100%;text-align:center;float:left">No results found</div>
+                        <?php }
+                    ?>                    
                 </div>
                 </div>
             </div>
