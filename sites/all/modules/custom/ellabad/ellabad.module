@@ -15,7 +15,8 @@ function ellabad_init(){
 	//ellabad_get_order_details(37);
 	//ellabad_order_total(37);
 	//ellabad_get_my_orders(1);
-	//ellabad_get_categories_by_type(0);
+	// ellabad_get_categories_by_type(1);
+	// die(pr($GLOBALS['categories']));
 }
 function ellabad_menu() {
 	$items['admin/custom/orders'] = array(
@@ -58,6 +59,13 @@ function ellabad_menu() {
 		'access arguments' => array('access content'),
 		//'weight' => -14,
 	);
+	$items['branding'] = array(
+        'title' => 'Branding',
+        'page callback' => 'ellabad_get_branding',
+        'page arguments' => array(),
+        'type' => MENU_CALLBACK,
+        'access arguments' => array('access content'),
+    );
     return $items;
 }
 
@@ -725,4 +733,12 @@ function ellabad_get_categories_by_type($category_type = 1){
         $categories = $data['other_categories'];
     }
 	return $categories;
+}
+
+/*
+* Function to list all branding
+*/
+function ellabad_get_branding() {	
+	$output = '';
+    return $output;
 }
