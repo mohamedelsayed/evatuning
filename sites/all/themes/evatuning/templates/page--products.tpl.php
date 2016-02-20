@@ -19,14 +19,18 @@ $actual_link = elsayed_get_actual_link();?>
                 </div>
             </div>
         </div>
-        <?php $category = 0;
+        <?php if(is_numeric($arg1)){
+            $category = $arg1;
+        }else{
+            $category = 0;
+        }        
         $home = 0;
         $limit = 12;
         $page = 1;
         if(isset($_GET['page'])){
             $page = $_GET['page'];
         }
-        $return = elsayed_get_products($category, $home, $limit, $page);
+        $return = elsayed_get_products($category, $home, $limit, $page, 0);
         $page_count = $return['page_count'];
         $products = $return['items'];?>
         <?php include_once 'list_products.php';?>
