@@ -30,6 +30,11 @@ jQuery(document).ready(function(){
 	jQuery("#paypal_form input.required_input").on("change paste keyup", function() {
 		validate_required_input(jQuery(this));
 	});
+	jQuery("form#search_form").submit(function(e){
+		e.preventDefault();
+		var key = jQuery("#search_key").val();
+		window.location.href = base_url+'/search-results/'+key;
+	});
 });
 // contactus form functions
 function isValidEmailAddress(emailAddress){
