@@ -17,7 +17,9 @@ function ellabad_init(){
 	//ellabad_get_my_orders(1);
 	// ellabad_get_categories_by_type(1);
 	// die(pr($GLOBALS['categories']));
-}
+	//die(pr(node_load(255)));
+	//ellabad_get_tax_id('mercedes');
+}	
 function ellabad_menu() {
 	$items['admin/custom/orders'] = array(
 		'title' => 'All Orders',
@@ -62,6 +64,13 @@ function ellabad_menu() {
 	$items['branding'] = array(
         'title' => 'Branding',
         'page callback' => 'ellabad_get_branding',
+        'page arguments' => array(),
+        'type' => MENU_CALLBACK,
+        'access arguments' => array('access content'),
+    );
+    $items['search-results'] = array(
+        'title' => 'Search',
+        'page callback' => 'ellabad_search',
         'page arguments' => array(),
         'type' => MENU_CALLBACK,
         'access arguments' => array('access content'),
@@ -746,4 +755,62 @@ function ellabad_get_categories_by_type($category_type = 1){
 function ellabad_get_branding() {	
 	$output = '';
     return $output;
+}
+
+/*
+* Function to list all branding
+*/
+function ellabad_search() {	
+	$output = '';
+    return $output;
+}
+/*
+* Function to handle search results page
+*/
+function ellabd_get_search_results($tag = '', $limit = 0, $page = 1){
+	$return = array();
+		$tax_id = ellabad_get_tax_id($tag);
+		if(is_numeric($tax_id) && $tax_id != 0) {
+		    $items = array();
+		    $query = new EntityFieldQuery();
+		    $query->entityCondition('entity_type', 'node')
+		            ->entityCondition('bundle', 'product')
+		            ->propertyCondition('status', 1)
+		            ->propertyOrderBy('created', 'DESC');
+		    $query->addMetaData('account', user_load(1));		    
+		    $query->fieldCondition('field_product_tags', 'tid', $tax_id, '=');
+		    		    
+		    $result = $query->execute();
+		    $total_items_nids = array();
+		    if (isset($result['node'])) {
+		        $total_items_nids = array_keys($result['node']);
+		    }
+		    // $return = array();
+		    if($limit != 0) {
+		        $start = ($page - 1) * $limit;       
+		        $total_count = count($total_items_nids);
+		        $items_nids = array_slice($total_items_nids, $start, $limit);
+		        $items = entity_load('node', $items_nids);
+		        $return['page_count'] = ceil($total_count / $limit);
+		        $return['items'] = $items;
+		    }
+		    // else{
+		    //     $items = entity_load('node', $total_items_nids);        
+		    //     $return = $items;
+		    // }
+		}
+    return $return;  
+}
+
+/*
+* Function get Tax id by tax_name
+*/
+function  ellabad_get_tax_id($tax_name = '') {
+	$tax_id = 0;
+	if($tax_name != '') {
+		$tax_id =  db_query('SELECT tx.tid  FROM {taxonomy_term_data} tx
+			 WHERE (tx.name = :tax_name)', 
+	        array(':tax_name' => $tax_name))->fetchField();
+	}
+	return $tax_id;
 }
