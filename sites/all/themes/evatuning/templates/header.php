@@ -1,7 +1,13 @@
 <?php $contact_us = elsayed_get_contact_us();
 $currencies = elsayed_get_currencies();
 $current_currency = elsayed_get_current_currency();
-$actual_link = elsayed_get_actual_link();?>
+$actual_link = elsayed_get_actual_link();
+
+$search_key = '';
+if(arg(0)== 'search-results' && arg(1) != ''){
+    $search_key = arg(1);
+}
+?>
 <header>
     <div id="top-header">
         <div class="container">
@@ -117,8 +123,8 @@ $actual_link = elsayed_get_actual_link();?>
                 </div>
                 <div class="col-md-3">
                     <div class="search-box">  
-                        <form name="search_form" method="get" class="search_form" action="<?php echo $GLOBALS['base_url'];?>/search-results/">
-                            <input id="search" type="text" />
+                        <form name="search_form" method="get" class="search_form" id="search_form" action="<?php echo $GLOBALS['base_url'];?>/search-results">
+                            <input id="search_key" type="text" name="key" value="<?php echo $search_key ?>" placeholder="Search"/>
                             <input type="submit" id="search-button" />
                         </form>
                     </div>
