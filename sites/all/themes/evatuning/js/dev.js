@@ -108,7 +108,7 @@ function addValidationRegister(){
 			//result = result.html.replace(/ /g, '');
 			//result = result.trim();
 			if(result.error == 0){
-				console.log('xxx');
+				//console.log('xxx');
 				flag = true;
 				//return true;
 				//jQuery('#ajaxuserregisterform').submit();
