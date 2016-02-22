@@ -1,8 +1,9 @@
 <footer>
     <div class="container">
         <div class="top-footer">
-            <div class="row">
-                <div class="col-md-9">
+            <div class="row">               
+                <div class="col-md-9"> 
+                    <?php /*
                     <div class="subscribe-form">
                         <span>Get in touch with us</span>
                         <form method="get" class="subscribeForm">
@@ -10,7 +11,9 @@
                             <input type="submit" id="submitButton" />
                         </form>
                     </div>
+                    */?>
                 </div>
+
                 <div class="col-md-3">
                     <div class="social-bottom">
                         <span>Follow us:</span>
@@ -44,18 +47,38 @@
                         </ul>
                     </div>
                 </div>-->
-                <div class="col-md-3">
+                 <?php 
+                $articles = ellabad_get_footer_articles();
+                if(!empty($articles)){
+                    ?>
+                <div class="col-md-3">                   
                     <div class="recent-posts">
                         <h4 class="footer-title">Recent News</h4>
-                        <div class="recent-post">
-                            <div class="recent-post-thumb">
-                                <img src="<?php echo $GLOBALS['base_url'].'/'.path_to_theme();?>/images/recent-post1.jpg" alt="">
-                            </div>
-                            <div class="recent-post-info">
-                                <h6><a href="#">News 1 </a></h6>
-                                
-                            </div>
-                        </div>
+                        <?php 
+                            foreach ($articles as $nid => $article) {                               
+                                $article_title = $article->title;
+                                $article_url = elsayed_get_node_url_by_id($article->nid);
+
+                               //$image = $GLOBALS['default_image'];
+                               if(isset($article->field_image[LANGUAGE_NONE][0]['uri'])){
+                                    $image = image_style_url('thumbnail', $article->field_image[LANGUAGE_NONE][0]['uri']);
+                                    $alt = $article->field_image[LANGUAGE_NONE][0]['alt'];                                        
+                                    //$default_image = image_style_url('default_size', $article->field_image[LANGUAGE_NONE][0]['uri']);
+                                }
+                                ?>
+                                <div class="recent-post">
+                                    <div class="recent-post-thumb">
+                                        <img style="width:70px;" src="<?php echo $image ?>" alt="<?php echo $alt ?>">
+                                    </div>
+                                    <div class="recent-post-info">
+                                        <h6><a href="<?php echo $article_url; ?>" target='_blank'> <?php echo $article_title ?> </a></h6>
+                                    </div>
+                                </div>
+                          <?php 
+                            } 
+                           ?>
+                        
+                        <?php /*?>
                         <div class="recent-post">
                             <div class="recent-post-thumb">
                                 <img src="<?php echo $GLOBALS['base_url'].'/'.path_to_theme();?>/images/recent-post2.jpg" alt="">
@@ -65,8 +88,10 @@
                                 
                             </div>
                         </div>
+                        <?php */?>
                     </div>
                 </div>
+                <?php } ?>
                 <div class="col-md-3">
                     <div class="more-info">
                         <h4 class="footer-title">More info</h4>
