@@ -19,6 +19,7 @@ function ellabad_init(){
 	// die(pr($GLOBALS['categories']));
 	//die(pr(node_load(255)));
 	//ellabad_get_tax_id('mercedes');
+	//ellabad_get_footer_articles();
 }	
 function ellabad_menu() {
 	$items['admin/custom/orders'] = array(
@@ -813,4 +814,26 @@ function  ellabad_get_tax_id($tax_name = '') {
 	        array(':tax_name' => $tax_name))->fetchField();
 	}
 	return $tax_id;
+}
+/*
+* ellabad get footer latest news
+*/
+
+function ellabad_get_footer_articles($limit = 2){
+    $items = array();
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'article')
+            ->propertyCondition('status', 1)
+            ->propertyOrderBy('created', 'DESC');
+    $query->addMetaData('account', user_load(1)); 
+    $result = $query->execute();
+    $total_items_nids = array();
+    if (isset($result['node'])) {
+        $total_items_nids = array_keys($result['node']);
+    }
+    $total_items_nids = array_slice($total_items_nids, 0, $limit);
+    $items = entity_load('node', $total_items_nids);        
+    $return = $items;   
+    return $return;  
 }
