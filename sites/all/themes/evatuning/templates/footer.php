@@ -1,3 +1,5 @@
+<?php $custom_settings = custom_settings_get_all(); 
+?>
 <footer>
     <div class="container">
         <div class="top-footer">
@@ -13,27 +15,38 @@
                     </div>
                     */?>
                 </div>
-
+                <?php  ?>
+                <?php  ?> 
+                <?php if(isset($custom_settings['footer_facebook']) || isset($custom_settings['footer_twitter']) || isset($custom_settings['footer_rss']) ) {?>               
                 <div class="col-md-3">
                     <div class="social-bottom">
                         <span>Follow us:</span>
                         <ul>
-                            <li><a href="#" class="fa fa-facebook"></a></li>
-                            <li><a href="#" class="fa fa-twitter"></a></li>
-                            <li><a href="#" class="fa fa-rss"></a></li>
+                            <?php if(isset($custom_settings['footer_facebook'])) {?>
+                                <li><a href="<?php echo($custom_settings['footer_facebook']);?>" class="fa fa-facebook"></a></li>
+                            <?php }?>
+                            <?php if(isset($custom_settings['footer_twitter'])) {?>
+                                <li><a href="<?php echo($custom_settings['footer_twitter']);?>" class="fa fa-twitter"></a></li>
+                            <?php }?>
+                            <?php if(isset($custom_settings['footer_rss'])) {?>
+                                <li><a href="<?php echo($custom_settings['footer_rss']);?>" class="fa fa-rss"></a></li>
+                            <?php }?>
                         </ul>
                     </div>
                 </div>
+                <?php } ?> 
             </div>
         </div>
         <div class="main-footer">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="about">
-                        <h4 class="footer-title">About Evatuning</h4>
-                        <p>Evatuning is creat company at Cars Spare Parts.</p>
+                <?php if(isset($custom_settings['footer_about_evatuning'])) {?>
+                    <div class="col-md-3">
+                        <div class="about">
+                            <h4 class="footer-title">About Evatuning</h4>
+                            <p><?php echo($custom_settings['footer_about_evatuning']);?></p>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
                 <!--<div class="col-md-3">
                     <div class="shop-list">
                         <h4 class="footer-title">Shop Categories</h4>
@@ -94,13 +107,22 @@
                 <?php } ?>
                 <div class="col-md-3">
                     <div class="more-info">
-                        <h4 class="footer-title">More info</h4>
-                        <p>Sed dignissim, diam id molestie faucibus, purus nisl pretium quam, in pulvinar velit massa id elit.</p>
-                        <ul>
-                            <li><i class="fa fa-phone"></i>010-665-82-653</li>
-                            <li><i class="fa fa-globe"></i>123 </li>
-                            <li><i class="fa fa-envelope"></i><a href="#">info@company.com</a></li>
-                        </ul>
+                        <?php if(isset($custom_settings['footer_more_info'])) { ?>
+                            <h4 class="footer-title">More info</h4>
+                            <p><?php echo($custom_settings['footer_more_info']); ?></p>
+                        <?php }?>
+                        <?php if(isset($custom_settings['footer_phone']) || isset($custom_settings['footer_address']) || isset($custom_settings['footer_email']) ) {?>                        
+                            <ul>
+                                <?php if(isset($custom_settings['footer_phone'])) {?> 
+                                    <li><i class="fa fa-phone"></i><?php echo($custom_settings['footer_phone']);?> </li>
+                                <?php } if(isset($custom_settings['footer_address'])) {?>                       
+                                    <li><i class="fa fa-globe"></i><?php echo($custom_settings['footer_address']); ?> </li>
+                                <?php } if(isset($custom_settings['footer_email'])) {?>
+                                    <li><i class="fa fa-envelope"></i><?php echo($custom_settings['footer_email']); ?></li>
+                                <?php } ?>
+                            </ul>
+                        <?php } ?>                        
+
                     </div>
                 </div>
             </div>
