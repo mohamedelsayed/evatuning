@@ -210,11 +210,10 @@ function custom_settings_with_pager_content() {
 
     return $output;
 }
-
 /*
 * create custom_settings table
 */
-function custom_settings_update_7103() {
+function custom_settings_update_7104() {
     $schema= array(
         'description' => 'The base table for custom_settings.',
         'fields' => array(
@@ -254,6 +253,5 @@ function custom_settings_update_7103() {
         ),
         'primary key' => array('id'),
     );
-    db_create_table('custom_settings', $schema);
-    
+    db_create_table('custom_settings', $schema);  
 }
