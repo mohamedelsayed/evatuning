@@ -255,3 +255,15 @@ function custom_settings_update_7104() {
     );
     db_create_table('custom_settings', $schema);  
 }
+
+function custom_settings_get_all() {
+    $custom_settings = array();
+    $custom_settings_data =  db_query('SELECT * FROM {custom_settings}')->fetchALL();
+    if(!empty($custom_settings_data)) {
+        foreach ($custom_settings_data as $no => $custom_setting) {
+            $key = $custom_setting->key_data;
+            $custom_settings[$key] = $custom_setting->value ;
+        }
+    }       
+    return $custom_settings;
+}
