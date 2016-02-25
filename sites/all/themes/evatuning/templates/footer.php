@@ -23,13 +23,13 @@
                         <span>Follow us:</span>
                         <ul>
                             <?php if(isset($custom_settings['footer_facebook'])) {?>
-                                <li><a href="<?php echo($custom_settings['footer_facebook']);?>" class="fa fa-facebook"></a></li>
+                                <li><a target="_blank" href="<?php echo($custom_settings['footer_facebook']);?>" class="fa fa-facebook"></a></li>
                             <?php }?>
                             <?php if(isset($custom_settings['footer_twitter'])) {?>
-                                <li><a href="<?php echo($custom_settings['footer_twitter']);?>" class="fa fa-twitter"></a></li>
+                                <li><a target="_blank" href="<?php echo($custom_settings['footer_twitter']);?>" class="fa fa-twitter"></a></li>
                             <?php }?>
                             <?php if(isset($custom_settings['footer_rss'])) {?>
-                                <li><a href="<?php echo($custom_settings['footer_rss']);?>" class="fa fa-rss"></a></li>
+                                <li><a target="_blank" href="<?php echo($custom_settings['footer_rss']);?>" class="fa fa-rss"></a></li>
                             <?php }?>
                         </ul>
                     </div>
