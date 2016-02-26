@@ -1,5 +1,4 @@
-<?php $custom_settings = custom_settings_get_all(); 
-?>
+<?php $custom_settings = custom_settings_get_all(); ?>
 <footer>
     <div class="container">
         <div class="top-footer">
@@ -87,10 +86,7 @@
                                         <h6><a href="<?php echo $article_url; ?>" target='_blank'> <?php echo $article_title ?> </a></h6>
                                     </div>
                                 </div>
-                          <?php 
-                            } 
-                           ?>
-                        
+                          <?php }?>                        
                         <?php /*?>
                         <div class="recent-post">
                             <div class="recent-post-thumb">
@@ -129,7 +125,7 @@
         </div>
         <div class="bottom-footer">
             <p>
-                <span>Copyright © <?php echo date('Y');?> <a href="#">IT World</a> 
+                <span>Copyright © <?php echo date('Y');?> <a target="_blank" href="http://itworldeg.com">IT World</a> 
             </p>
         </div>
         
