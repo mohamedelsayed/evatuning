@@ -12,9 +12,6 @@ $username = 'root';
 $password = 'root';
 $conf['error_level'] = 0;
 if (strpos($http_host, 'mohamedelsayed.net') !== FALSE) {
-    $database = 'elsayed_evatuning';   
-    $username = 'elsayed_evatunin';
-    $password = '8TSb0q9Db8og';   
 }elseif (strpos($http_host, 'localhost') !== FALSE) {
     if(PHP_OS == 'Linux'){
         $conf['error_level'] = 2;
